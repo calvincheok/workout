@@ -1,0 +1,1862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#101418">
+<title>Taper</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+:root{
+  --ink:#101418;
+  --ink-2:#3b444e;
+  --ink-3:#7c8792;
+  --paper:#f2f3f0;
+  --card:#ffffff;
+  --line:#dfe2dd;
+  --cobalt:#1f37d8;
+  --pine:#0d6f5c;
+  --amber:#b5761a;
+  --rose:#b3243c;
+  --r:14px;
+  --pad:16px;
+  --f-disp:"Helvetica Neue",Helvetica,Inter,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  --f-body:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --f-num:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  background:var(--paper);color:var(--ink);font-family:var(--f-body);
+  font-size:16px;line-height:1.45;
+  padding-bottom:calc(74px + env(safe-area-inset-bottom));
+  overscroll-behavior-y:contain;
+}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+input,select,textarea{font:inherit;color:inherit}
+
+/* ---------- signature: the taper chevron ---------- */
+.taper{display:block;width:100%;height:8px}
+.taper i{display:block;height:100%;background:
+  repeating-linear-gradient(115deg,var(--ink) 0 2px,transparent 2px 9px);opacity:.22}
+
+/* ---------- header ---------- */
+header{
+  position:sticky;top:0;z-index:20;background:var(--ink);color:#fff;
+  padding:calc(12px + env(safe-area-inset-top)) var(--pad) 12px;
+}
+.eyebrow{
+  font-family:var(--f-num);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;
+  color:#98a3ad;display:flex;justify-content:space-between;gap:8px
+}
+h1{
+  font-family:var(--f-disp);font-weight:800;letter-spacing:-.03em;
+  font-size:27px;line-height:1.05;margin:6px 0 0;text-transform:uppercase
+}
+h1 small{display:block;font-size:12px;font-weight:600;letter-spacing:.04em;
+  text-transform:none;color:#98a3ad;margin-top:5px}
+
+/* ---------- layout ---------- */
+main{padding:var(--pad) var(--pad) 8px;max-width:560px;margin:0 auto}
+.sec{margin:0 0 22px}
+.sec-h{
+  font-family:var(--f-num);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--ink-3);display:flex;align-items:center;gap:10px;margin:0 0 10px
+}
+.sec-h:after{content:"";flex:1;height:1px;background:var(--line)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:var(--pad)}
+.card + .card{margin-top:10px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.stack{display:flex;flex-direction:column;gap:10px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.muted{color:var(--ink-3)}
+.small{font-size:13.5px}
+.tiny{font-size:12px}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.big{font-family:var(--f-disp);font-weight:800;letter-spacing:-.02em;font-size:30px;line-height:1}
+.mid{font-family:var(--f-disp);font-weight:700;letter-spacing:-.01em;font-size:18px}
+.label{font-family:var(--f-num);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3)}
+
+/* ---------- today hero ---------- */
+.hero{background:var(--ink);color:#fff;border:0;border-radius:var(--r);padding:0;overflow:hidden}
+.hero .body{padding:18px var(--pad)}
+.hero .kind{font-family:var(--f-disp);font-weight:800;font-size:34px;letter-spacing:-.03em;
+  text-transform:uppercase;line-height:.98}
+.hero .meta{color:#98a3ad;font-size:13px;margin-top:6px}
+.hero ol{margin:14px 0 0;padding:0;list-style:none;counter-reset:x}
+.hero ol li{counter-increment:x;display:flex;gap:10px;padding:7px 0;border-top:1px solid #23292f;
+  font-size:14.5px;color:#e7eaed}
+.hero ol li:before{content:counter(x);font-family:var(--f-num);font-size:11px;color:#6d7883;width:14px;
+  padding-top:3px}
+.rest-hero{background:linear-gradient(180deg,#0d6f5c,#0b5b4c);color:#fff}
+.rest-hero .meta{color:#b7ded4}
+
+/* ---------- buttons ---------- */
+.btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
+  min-height:52px;border-radius:12px;background:var(--cobalt);color:#fff;
+  font-family:var(--f-disp);font-weight:800;letter-spacing:.03em;text-transform:uppercase;font-size:14.5px
+}
+.btn:active{transform:translateY(1px)}
+.btn.ghost{background:transparent;border:1.5px solid var(--line);color:var(--ink)}
+.btn.dark{background:var(--ink)}
+.btn.pine{background:var(--pine)}
+.btn.sm{min-height:40px;font-size:12.5px;border-radius:10px;padding:0 14px;width:auto}
+.btn[disabled]{opacity:.4}
+.link{color:var(--cobalt);font-weight:600;font-size:13.5px;text-decoration:underline;text-underline-offset:3px}
+
+/* ---------- bars ---------- */
+.bar{height:9px;border-radius:99px;background:#e6e8e3;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--cobalt);border-radius:99px;transition:width .3s}
+.bar.pine i{background:var(--pine)}
+.bar.amber i{background:var(--amber)}
+
+/* ---------- chips / pills ---------- */
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:99px;
+  padding:5px 11px;font-size:12.5px;background:#fff}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.pill{font-family:var(--f-num);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  padding:3px 8px;border-radius:99px;border:1px solid currentColor}
+.c-a{color:var(--cobalt)}.c-b{color:var(--rose)}.c-core{color:var(--amber)}.c-rest{color:var(--pine)}
+
+/* ---------- inputs ---------- */
+.field{display:flex;flex-direction:column;gap:6px}
+input[type=number],input[type=text],select,textarea{
+  width:100%;padding:13px 14px;border:1.5px solid var(--line);border-radius:11px;background:#fff;
+  font-family:var(--f-num);font-size:17px}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--cobalt)}
+.stepper{display:flex;align-items:center;gap:8px}
+.stepper button{width:52px;height:52px;border:1.5px solid var(--line);border-radius:11px;background:#fff;
+  font-size:24px;font-weight:600;display:grid;place-items:center}
+.stepper input{text-align:center;font-size:24px;font-weight:700}
+.seg{display:flex;gap:8px}
+.seg button{flex:1;min-height:46px;border:1.5px solid var(--line);border-radius:11px;background:#fff;
+  font-size:13.5px;font-weight:600}
+.seg button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+/* ---------- exercise runner ---------- */
+.ex-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.setdots{display:flex;gap:6px;margin-top:12px}
+.setdots span{flex:1;height:6px;border-radius:99px;background:#e6e8e3}
+.setdots span.done{background:var(--pine)}
+.setdots span.now{background:var(--cobalt)}
+.timer{font-family:var(--f-num);font-size:56px;font-weight:600;letter-spacing:-.03em;text-align:center;
+  font-variant-numeric:tabular-nums}
+.sheet{position:fixed;inset:0;z-index:60;background:rgba(16,20,24,.55);display:flex;align-items:flex-end}
+.sheet .inner{background:var(--paper);width:100%;max-height:92vh;overflow:auto;border-radius:18px 18px 0 0;
+  padding:20px var(--pad) calc(24px + env(safe-area-inset-bottom))}
+.sheet h3{font-family:var(--f-disp);font-size:21px;letter-spacing:-.02em;margin:0 0 4px}
+.sheet h4{font-family:var(--f-num);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink-3);margin:18px 0 6px}
+.sheet ul{margin:0;padding-left:18px}
+.sheet li{margin:4px 0;font-size:14.5px}
+.note{border-left:3px solid var(--amber);background:#fdf7ec;padding:10px 12px;border-radius:0 10px 10px 0;
+  font-size:13.5px}
+.note.blue{border-color:var(--cobalt);background:#eef1fe}
+.note.pine{border-color:var(--pine);background:#eaf5f2}
+
+/* ---------- nav ---------- */
+nav{
+  position:fixed;bottom:0;left:0;right:0;z-index:30;background:#fff;border-top:1px solid var(--line);
+  display:grid;grid-template-columns:repeat(5,1fr);padding-bottom:env(safe-area-inset-bottom)
+}
+nav button{padding:9px 0 8px;display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--ink-3)}
+nav button span.i{font-size:19px;line-height:1}
+nav button span.t{font-family:var(--f-num);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase}
+nav button.on{color:var(--ink)}
+nav button.on span.t{color:var(--ink)}
+
+/* ---------- calendar ---------- */
+.wk{display:grid;grid-template-columns:34px repeat(7,1fr);gap:5px;align-items:center}
+.wk .d{aspect-ratio:1;border-radius:8px;display:grid;place-items:center;font-family:var(--f-num);
+  font-size:11px;font-weight:600;border:1px solid var(--line);background:#fff}
+.wk .wn{font-family:var(--f-num);font-size:10px;color:var(--ink-3)}
+.d.A{background:#e7eafd;border-color:#c7cffa;color:#1f37d8}
+.d.B{background:#fbe9ec;border-color:#f3ccd4;color:#b3243c}
+.d.C{background:#fdf3e3;border-color:#f0dcb8;color:#8f5d13}
+.d.R{background:#eaf5f2;border-color:#cbe6de;color:#0d6f5c}
+.d.X{background:#f5f6f4;color:#b3bcc4}
+.d.today{outline:2.5px solid var(--ink);outline-offset:1px}
+.d.done:after{content:"";position:absolute}
+.dwrap{position:relative}
+.dwrap .tick{position:absolute;right:2px;top:1px;font-size:9px;color:var(--pine)}
+
+/* ---------- chart ---------- */
+svg.chart{width:100%;height:120px;display:block;overflow:visible}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--ink-3)}
+
+/* ---------- onboarding ---------- */
+.ob{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:32px var(--pad);
+  max-width:520px;margin:0 auto}
+.ob .step{font-family:var(--f-num);font-size:10.5px;letter-spacing:.18em;color:var(--ink-3);text-transform:uppercase}
+.ob h2{font-family:var(--f-disp);font-weight:800;font-size:40px;letter-spacing:-.035em;line-height:1;
+  margin:10px 0 14px;text-transform:uppercase}
+.ob .checklist{list-style:none;padding:0;margin:0}
+.ob .checklist li{display:flex;gap:10px;padding:11px 0;border-bottom:1px solid var(--line);font-size:15.5px}
+.ob .checklist li b{color:var(--pine)}
+.wordmark{font-family:var(--f-disp);font-weight:800;font-size:13px;letter-spacing:.4em;text-transform:uppercase;
+  color:var(--ink-3)}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.fade{animation:f .22s ease-out}
+@keyframes f{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+/* ================= TAPER — personal home coach ================= */
+
+/* ---------------- storage (works inside a preview AND as a local file) ---------------- */
+const KEY = 'taper_v1';
+async function saveState(){
+  const s = JSON.stringify(S);
+  try{ if(window.storage && window.storage.set) await window.storage.set(KEY, s, false); }catch(e){}
+  try{ localStorage.setItem(KEY, s); }catch(e){}
+}
+async function loadState(){
+  let raw = null;
+  try{ if(window.storage && window.storage.get){ const r = await window.storage.get(KEY, false); if(r && r.value) raw = r.value; } }catch(e){}
+  if(!raw){ try{ raw = localStorage.getItem(KEY); }catch(e){} }
+  if(!raw) return null;
+  try{ return JSON.parse(raw); }catch(e){ return null; }
+}
+
+/* ---------------- exercise library ---------------- */
+const EX = {
+  squat:{ name:'Bodyweight Squat', sets:3, lo:12, hi:20, rest:90, side:false, kit:'Bodyweight',
+    prio:0,
+    prog:'When 3 × 20 feels controlled and easy, hold the 7.5 kg dumbbell at your chest.',
+    how:['Feet about shoulder width, toes turned out slightly.','Push your hips back and down, knees tracking over your toes.','Go as low as you can keep your heels flat and back neutral.','Drive through the whole foot to stand tall.'],
+    tips:['Chest up, ribs stacked over hips.','Knees may travel past the toes, that is fine.','Take 2 seconds down, 1 second up.'],
+    miss:['Heels lifting off the floor.','Knees collapsing inward.','Rounding the lower back at the bottom.'],
+    mus:['Quadriceps','Glutes','Core'] },
+
+  pushup:{ name:'Push-up', sets:3, lo:6, hi:15, rest:90, side:false, kit:'Floor',
+    prog:'Too hard? Do knee push-ups. Once 3 × 15 is easy, lower for 3 slow seconds instead of adding reps.',
+    how:['Hands slightly wider than shoulders, under the chest line.','Body in one straight line from head to heels.','Lower until your chest is a fist from the floor.','Press back up without letting the hips sag.'],
+    tips:['Elbows go back at roughly 45°, not straight out.','Squeeze glutes and brace the stomach the whole set.','Knee version keeps the same straight line from head to knees.'],
+    miss:['Hips sagging or piking up.','Head dropping forward first.','Half reps with no chest depth.'],
+    mus:['Chest','Front shoulder','Triceps','Core'] },
+
+  row:{ name:'One-arm Dumbbell Row', sets:3, lo:10, hi:15, rest:90, side:true, kit:'7.5 kg dumbbell + chair/bed',
+    prio:1,
+    prog:'At the top of the range, add a 1 second squeeze at the top before adding reps.',
+    how:['Put one hand on a chair or bed edge, feet staggered, back flat.','Let the dumbbell hang, arm straight, shoulder relaxed.','Pull the elbow backward toward your hip.','Lower under control until the arm is fully straight.'],
+    tips:['Pull with the elbow, not the hand.','Keep the shoulder pulled down and back at the top.','Do not rotate your torso to help the weight up.'],
+    miss:['Yanking with the lower back.','Elbow flaring out sideways.','Cutting the bottom of the rep short.'],
+    mus:['Latissimus dorsi','Upper back','Rear shoulder','Biceps'] },
+
+  press:{ name:'One-arm Dumbbell Shoulder Press', sets:3, lo:8, hi:15, rest:90, side:true, kit:'7.5 kg dumbbell',
+    prog:'Add a 1 second pause at the bottom, or press slower, before chasing more reps.',
+    how:['Stand tall, dumbbell at shoulder height, palm facing forward.','Brace your stomach and squeeze your glutes.','Press straight up until the arm is locked overhead.','Lower slowly back to shoulder height.'],
+    tips:['Ribs down, do not lean back to press.','Wrist stacked over the elbow.','Free hand on your hip or a wall for balance.'],
+    miss:['Bouncing with the knees.','Arching the lower back.','Stopping halfway down.'],
+    mus:['Front and side shoulder','Triceps','Upper back','Core'] },
+
+  lateral:{ name:'One-arm Dumbbell Lateral Raise', sets:3, lo:12, hi:20, rest:50, side:true, kit:'7.5 kg dumbbell',
+    prio:1,
+    heavy:true,
+    prog:'7.5 kg is heavy for this one. Cut reps or range before you swing. Slow lowering beats extra reps.',
+    how:['Stand tall, dumbbell by your side, slight bend in the elbow.','Raise the arm out to the side, leading with the elbow.','Stop at about shoulder height.','Lower slowly, 3 seconds, all the way down.'],
+    tips:['Zero swing, if the body moves the weight is too heavy for that rep.','Keep the shoulder pulled away from the ear.','Half range with control is a valid rep, log it honestly.'],
+    miss:['Using the hips as a slingshot.','Shrugging the weight up.','Going above shoulder height.'],
+    mus:['Side shoulder (lateral deltoid)','Upper back','Core'] },
+
+  glute:{ name:'Dumbbell Glute Bridge', sets:3, lo:15, hi:20, rest:60, side:false, kit:'7.5 kg dumbbell + floor',
+    prog:'Add a 2 second squeeze at the top, then try single-leg with no weight.',
+    how:['Lie on your back, knees bent, heels close to your glutes.','Rest the dumbbell carefully across your hips and hold it.','Drive your heels down and lift the hips until the body is a straight line.','Lower until the glutes lightly touch the floor.'],
+    tips:['Squeeze the glutes hard at the top for a full second.','Ribs down, do not arch the lower back to get higher.','Place and remove the dumbbell gently, both hands.'],
+    miss:['Pushing through the toes.','Hyperextending the lower back at the top.','Rushing the reps.'],
+    mus:['Glutes','Hamstrings','Core'] },
+
+  bss:{ name:'Bulgarian Split Squat', sets:3, lo:8, hi:12, rest:90, side:true, kit:'Bodyweight + chair/bed',
+    prog:'Once 3 × 12 per leg is steady, hold the 7.5 kg dumbbell in the opposite hand.',
+    how:['Stand about one long stride in front of a chair or bed.','Rest the top of your back foot on it.','Lower straight down until the front thigh is near parallel.','Drive through the front foot to stand.'],
+    tips:['Most of your weight stays on the front leg.','Small lean forward is fine, keep the back flat.','Balance shaky? Fingertips on a wall.'],
+    miss:['Stepping too short so the knee jams forward.','Pushing off the back foot.','Front heel lifting.'],
+    mus:['Quadriceps','Glutes','Adductors','Core'],
+    alt:'If balance is a problem, do reverse lunges instead, same reps.' },
+
+  floorpress:{ name:'One-arm Dumbbell Floor Press', sets:3, lo:10, hi:15, rest:90, side:true, kit:'7.5 kg dumbbell + floor',
+    prog:'Add a 1 second pause with the elbow resting on the floor.',
+    how:['Lie on your back, knees bent, dumbbell in one hand over the chest.','Elbow at roughly 45° from your body.','Lower until the upper arm touches the floor.','Press back up over the chest line.'],
+    tips:['Keep the wrist stacked over the elbow.','Light touch of the floor, do not bounce.','Free hand out to the side for stability.'],
+    miss:['Elbow flared straight out at 90°.','Dropping the arm hard onto the floor.','Twisting the torso to press.'],
+    mus:['Chest','Triceps','Front shoulder'] },
+
+  rdl:{ name:'Dumbbell Romanian Deadlift', sets:3, lo:10, hi:15, rest:90, side:false, kit:'7.5 kg dumbbell',
+    prog:'Slow the lowering to 4 seconds, then try single-leg for a real balance and hamstring challenge.',
+    how:['Stand tall holding the dumbbell in front of your thighs.','Push your hips backward, knees only slightly bent.','Slide the dumbbell down your legs until you feel a hamstring stretch.','Drive the hips forward to stand tall.'],
+    tips:['Hips move back, this is a hinge, not a squat.','Back stays flat the whole time, chest proud.','The dumbbell stays close to your legs.'],
+    miss:['Rounding the lower back instead of hinging.','Bending the knees like a squat.','Going deeper than your hamstrings allow.'],
+    mus:['Hamstrings','Glutes','Lower back','Grip'],
+    alt:'Single-leg feels unstable? Use both legs, same reps.' },
+
+  curl:{ name:'Dumbbell Biceps Curl', sets:3, lo:10, hi:15, rest:60, side:true, kit:'7.5 kg dumbbell',
+    prog:'Lower for 3 seconds, then add a pause halfway down.',
+    how:['Stand tall, dumbbell at your side, palm forward.','Curl up without moving the elbow forward.','Squeeze at the top.','Lower slowly until the arm is fully straight.'],
+    tips:['Elbow pinned to your ribs.','No body swing, the biceps does the work.','Full straight arm at the bottom every rep.'],
+    miss:['Rocking the torso back.','Half reps at the bottom.','Rushing the lowering phase.'],
+    mus:['Biceps','Forearms'] },
+
+  triceps:{ name:'Dumbbell Overhead Triceps Extension', sets:3, lo:10, hi:15, rest:60, side:false, kit:'7.5 kg dumbbell',
+    prog:'Pause 1 second at the bottom stretch, then slow the lowering to 3 seconds.',
+    how:['Hold the dumbbell with both hands overhead.','Keep the elbows pointing forward and close together.','Lower the weight behind your head by bending the elbows only.','Press back up until the arms are straight.'],
+    tips:['Upper arms stay still, only the forearms move.','Ribs down, do not arch the back.','Control it behind the head, no dropping.'],
+    miss:['Elbows flaring wide.','Lower back arching.','Using the shoulders to lift.'],
+    mus:['Triceps','Core'] },
+
+  plank:{ name:'Plank', sets:3, lo:30, hi:60, rest:45, side:false, kit:'Floor', time:true,
+    prog:'Past 60 seconds, switch to a harder version, lift one foot, before adding time.',
+    how:['Forearms on the floor, elbows under the shoulders.','Body in one straight line, feet hip width.','Brace the stomach and squeeze the glutes.','Breathe normally and hold.'],
+    tips:['Push the floor away with the forearms.','Tuck the tailbone slightly, no sagging.','Stop when the form breaks, not when the timer ends.'],
+    miss:['Hips sagging toward the floor.','Butt in the air.','Holding your breath.'],
+    mus:['Deep core','Abs','Shoulders','Glutes'] },
+
+  revcrunch:{ name:'Reverse Crunch', sets:3, lo:10, hi:15, rest:45, side:false, kit:'Floor',
+    prog:'Slow the lowering to 3 seconds, then pause with the hips off the floor.',
+    how:['Lie on your back, hands by your hips, knees bent.','Curl the knees toward your chest, lifting the hips slightly.','Pause and feel the lower abs.','Lower the legs slowly without touching the floor.'],
+    tips:['Move the hips, not just the legs.','Lower back stays pressed to the floor.','Small controlled range beats big swinging.'],
+    miss:['Swinging the legs for momentum.','Pulling with the neck.','Feet dropping to the floor between reps.'],
+    mus:['Lower abs','Hip flexors','Deep core'] },
+
+  deadbug:{ name:'Dead Bug', sets:3, lo:8, hi:12, rest:45, side:true, kit:'Floor',
+    prog:'Slow each rep to 4 seconds, then hold the extended position for 2 seconds.',
+    how:['Lie on your back, arms straight up, knees bent over the hips.','Press the lower back flat into the floor.','Extend one arm overhead and the opposite leg straight out.','Return slowly and switch sides.'],
+    tips:['The lower back must not lift, that is the whole exercise.','Exhale as you extend.','Go slow, this is a control drill.'],
+    miss:['Lower back arching off the floor.','Rushing the reps.','Holding the breath.'],
+    mus:['Deep core','Abs','Hip flexors','Shoulders'] }
+};
+
+const WARMUP = [
+  'March in place — 60 sec','Arm circles — 30 sec','Bodyweight squats — 10 reps',
+  'Glute bridges — 10 reps','Shoulder mobility — 30 sec','Easy push-ups — 5 reps'
+];
+
+const WORKOUTS = {
+  A:{ code:'A', title:'Workout A', dur:'40–50 min', cls:'c-a', exs:['squat','pushup','row','press','lateral','glute'] },
+  B:{ code:'B', title:'Workout B', dur:'40–50 min', cls:'c-b', exs:['bss','floorpress','row','rdl','curl','triceps'] },
+  C:{ code:'C', title:'Core + Cardio', dur:'40–55 min', cls:'c-core', exs:['plank','revcrunch','deadbug'] }
+};
+/* Workout B gives the row an extra set. Back is the priority. */
+const SET_OVERRIDE = { 'B:row':4 };
+
+const PHASES = [
+  {w:[1,2], name:'Phase 1 — Learn the movements', goal:'Easy to moderate. Never to failure. Form is the only score this fortnight.'},
+  {w:[3,4], name:'Phase 2 — Build consistency', goal:'Use the prescribed sets and reps, and record every set honestly.'},
+  {w:[5,8], name:'Phase 3 — Progressive overload', goal:'Beat last week using reps, tempo, pauses or harder variations.'},
+  {w:[9,12],name:'Phase 4 — Compare and push', goal:'Measure against your own week 1 numbers. Harder variations over endless reps.'}
+];
+
+/* Monday/Friday carry the primary lift, Wednesday the other. Odd weeks start with A. */
+function dayPlan(week, dow){ // dow: 0=Sun..6=Sat
+  const primary = (week % 2 === 1) ? 'A' : 'B';
+  const secondary = primary === 'A' ? 'B' : 'A';
+  switch(dow){
+    case 1: return {type:primary};
+    case 2: return {type:'RECOVERY'};
+    case 3: return {type:secondary};
+    case 4: return {type:'REST'};
+    case 5: return {type:primary};
+    case 6: return {type:'C'};
+    default: return {type:'REST'};
+  }
+}
+function phaseFor(w){ return PHASES.find(p=>w>=p.w[0]&&w<=p.w[1]) || PHASES[3]; }
+function setsFor(code, exId){ return SET_OVERRIDE[code+':'+exId] || EX[exId].sets; }
+function restFor(exId){ return S.rest[exId] != null ? S.rest[exId] : EX[exId].rest; }
+
+/* ---------------- date helpers ---------------- */
+const DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const DSH=['S','M','T','W','T','F','S'];
+function ymd(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function parseYmd(s){ const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); }
+function today(){ return new Date(); }
+function mondayOf(d){ const x=new Date(d); const off=(x.getDay()+6)%7; x.setDate(x.getDate()-off); x.setHours(0,0,0,0); return x; }
+function weekNumber(d){
+  const start = mondayOf(parseYmd(S.profile.startDate));
+  const diff = Math.floor((mondayOf(d) - start)/86400000/7);
+  return Math.max(1, diff+1);
+}
+const DAYS_ZH=['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
+const DSH_ZH=['日','一','二','三','四','五','六'];
+function fmtDate(d){
+  if(typeof S!=='undefined' && S && S.lang==='zh')
+    return (d.getMonth()+1)+'月'+d.getDate()+'日 '+DAYS_ZH[d.getDay()];
+  return DAYS[d.getDay()]+', '+d.toLocaleDateString(undefined,{day:'numeric',month:'short'});
+}
+function mmss(s){ const m=Math.floor(s/60), r=s%60; return m+':'+String(r).padStart(2,'0'); }
+
+/* ---------------- state ---------------- */
+let S = null;
+function freshState(){
+  return {
+    onboarded:false,
+    profile:{ age:23, sex:'Male', height:170, weight:66, startWeight:66, startDate:ymd(today()), equipment:1 },
+    targets:{ proteinLo:105, proteinHi:130, stepsLo:7000, stepsHi:10000, sleepLo:7, sleepHi:9 },
+    rest:{},            // exId -> custom rest seconds
+    daily:{},           // 'YYYY-MM-DD' -> {protein, steps, sleep}
+    sessions:[],        // completed workouts
+    measures:[],        // {date, weight, waist, chest, arm, thigh}
+    checkins:[],        // {week, ...}
+    bests:{},           // exId -> best single-set reps
+    active:null,        // in-progress session
+    lang:'en',
+    tab:'home'
+  };
+}
+let TAB='home';
+let SHEET=null;      // {kind, ...}
+let TIMER=null;      // {left, total, id, label}
+
+/* ---------------- tiny render helpers ---------------- */
+const $ = s => document.querySelector(s);
+function esc(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function el(html){ const t=document.createElement('template'); t.innerHTML=html.trim(); return t.content.firstElementChild; }
+function bar(pct, cls){ return `<div class="bar ${cls||''}"><i style="width:${Math.max(0,Math.min(100,pct))}%"></i></div>`; }
+function todayLog(){ const k=ymd(today()); if(!S.daily[k]) S.daily[k]={protein:0,steps:0,sleep:null}; return S.daily[k]; }
+function sessionOn(dstr){ return S.sessions.find(s=>s.date===dstr); }
+
+function streak(){
+  let n=0; const d=new Date(); d.setHours(0,0,0,0);
+  for(let i=0;i<400;i++){
+    const key=ymd(d), w=weekNumber(d), p=dayPlan(w,d.getDay());
+    const done = !!sessionOn(key);
+    const isRest = p.type==='REST';
+    const log = S.daily[key];
+    const movedOnRecovery = p.type==='RECOVERY' && log && (log.steps>=S.targets.stepsLo);
+    if(i===0){ // today does not break a streak yet
+      if(done||isRest||movedOnRecovery) n++;
+    } else {
+      if(done||isRest||movedOnRecovery) n++; else break;
+    }
+    d.setDate(d.getDate()-1);
+  }
+  return n;
+}
+function weekStats(week){
+  const start=mondayOf(parseYmd(S.profile.startDate)); start.setDate(start.getDate()+(week-1)*7);
+  let planned=0, done=0;
+  for(let i=0;i<7;i++){
+    const d=new Date(start); d.setDate(d.getDate()+i);
+    const t=dayPlan(week,d.getDay()).type;
+    if(t==='A'||t==='B'||t==='C'){ planned++; if(sessionOn(ymd(d))) done++; }
+  }
+  return {planned,done};
+}
+function latestMeasure(){ return S.measures.length? S.measures[S.measures.length-1] : null; }
+function currentWeight(){ const m=[...S.measures].reverse().find(x=>x.weight); return m? m.weight : S.profile.weight; }
+
+/* progressive-overload check: has this exercise topped out recently? */
+function shouldProgress(exId){
+  const hist = [];
+  for(let i=S.sessions.length-1;i>=0 && hist.length<1;i--){
+    const s=S.sessions[i]; const sets=s.sets.filter(x=>x.ex===exId);
+    if(sets.length) hist.push(sets);
+  }
+  if(!hist.length) return false;
+  const sets=hist[0], e=EX[exId];
+  const allTop = sets.every(x=>x.reps>=e.hi);
+  const easy = sets.filter(x=>x.diff==='Hard').length===0;
+  return allTop && easy;
+}
+
+
+/* ---------------- i18n ----------------
+   The app renders in English, then a single pass rewrites text nodes.
+   Only text nodes are touched, so tags, classes and data attributes stay intact. */
+function isZH(){ return S && S.lang==='zh'; }
+function setLang(l){
+  S.lang=l; saveState();
+  document.documentElement.lang = l==='zh'?'zh-CN':'en';
+  document.body.style.fontFamily = l==='zh'
+    ? '-apple-system,"PingFang SC","Hiragino Sans GB","Noto Sans SC","Microsoft YaHei",system-ui,sans-serif'
+    : '';
+  render();
+}
+function applyLang(root){
+  if(!isZH() || !root) return;
+  const walker=document.createTreeWalker(root, 4 /* TEXT_NODE */);
+  const nodes=[];
+  while(walker.nextNode()) nodes.push(walker.currentNode);
+  nodes.forEach(n=>{
+    const raw=n.nodeValue, key=raw.trim();
+    if(!key) return;
+    if(DICT[key]!==undefined){ n.nodeValue=raw.replace(key,DICT[key]); return; }
+    let out=key, hit=false;
+    for(const [re,rep] of RULES){ const before=out; out=out.replace(re,rep); if(out!==before) hit=true; }
+    if(hit) n.nodeValue=raw.replace(key,out);
+  });
+  root.querySelectorAll('[placeholder]').forEach(i=>{
+    const v=DICT[i.placeholder]; if(v) i.placeholder=v;
+  });
+}
+
+/* patterns first, they run only when no exact match exists */
+const RULES=[
+  [/^· (.+)$/, (m,a)=> DICT[a]!==undefined ? '· '+DICT[a] : m],
+  [/^(\d+)\. (.+)$/, (m,a,b)=> DICT[b]!==undefined ? a+'. '+DICT[b] : m],
+  [/^(\d+) × (\d+)–(\d+) (reps|sec)( each side)? · rest (\d+) s( · (.+))?$/,
+    (m,n,lo,hi,unit,side,rest,_x,kit)=>{
+      const u = unit==='sec' ? '秒' : '次';
+      const s = side ? '每边 ' : '';
+      const k = kit ? ' · '+(DICT[kit]!==undefined?DICT[kit]:kit) : '';
+      return n+' 组 × '+s+lo+'–'+hi+' '+u+' · 组间休息 '+rest+' 秒'+k;
+    }],
+  [/^[A-Za-z][A-Za-z ()]+( · [A-Za-z][A-Za-z ()]+)+$/, m=>{
+      const parts=m.split(' · ');
+      if(!parts.every(x=>DICT[x]!==undefined)) return m;
+      return parts.map(x=>DICT[x]).join(' · ');
+    }],
+  [/^Good (morning|afternoon|evening), (.+)\.$/,
+    (m,g,name)=>({morning:'早上好',afternoon:'下午好',evening:'晚上好'}[g])+'，'+name+'。'],
+  [/^Target ([\d,]+)–([\d,]+) steps, or 30 minutes of walking if that is easier to measure\.$/,
+    '目标 $1–$2 步；如果不好统计，走满 30 分钟也可以。'],
+  [/^Week (\d+) \/ 12$/,'第 $1 周 / 共 12 周'],
+  [/^Week (\d+)$/,'第 $1 周'],
+  [/^Week (\d+) check-in$/,'第 $1 周复盘'],
+  [/^W(\d+)–(\d+)$/,'第 $1–$2 周'],
+  [/^W(\d+)$/,'W$1'],
+  [/^(\d+)\/(\d+) sets · (\d+) min$/,'$1/$2 组 · $3 分钟'],
+  [/^(\d+)\/(\d+) sets ✓$/,'$1/$2 组 ✓'],
+  [/^(\d+)\/(\d+) sets$/,'$1/$2 组'],
+  [/^(\d+) × (\d+)–(\d+) reps each side · rest (\d+) s$/,'$1 组 × 每边 $2–$3 次 · 组间休息 $4 秒'],
+  [/^(\d+) × (\d+)–(\d+) reps · rest (\d+) s$/,'$1 组 × $2–$3 次 · 组间休息 $4 秒'],
+  [/^(\d+) × (\d+)–(\d+) sec each side · rest (\d+) s$/,'$1 组 × 每边 $2–$3 秒 · 组间休息 $4 秒'],
+  [/^(\d+) × (\d+)–(\d+) sec · rest (\d+) s$/,'$1 组 × $2–$3 秒 · 组间休息 $4 秒'],
+  [/^(\d+) × (\d+)–(\d+) reps each side · rest (\d+) s · (.+)$/,'$1 组 × 每边 $2–$3 次 · 休息 $4 秒 · $5'],
+  [/^(\d+)×(\d+)–(\d+)s \/side$/,'$1×$2–$3秒/边'],
+  [/^(\d+)×(\d+)–(\d+) \/side$/,'$1×$2–$3/边'],
+  [/^(\d+)×(\d+)–(\d+)s$/,'$1×$2–$3秒'],
+  [/^(\d+)×(\d+)–(\d+)$/,'$1×$2–$3'],
+  [/^Set (\d+) — reps completed per side$/,'第 $1 组 — 每边完成次数'],
+  [/^Set (\d+) — reps completed$/,'第 $1 组 — 完成次数'],
+  [/^Set (\d+) — seconds held$/,'第 $1 组 — 坚持秒数'],
+  [/^Start set (\d+)$/,'开始第 $1 组'],
+  [/^Last time: (.+)$/,'上次：$1'],
+  [/^(\d+)–(\d+) min · (\d+) exercises · warm-up included$/,'$1–$2 分钟 · $3 个动作 · 含热身'],
+  [/^(\d+) min · (\d+) sets · (\d+) personal records?$/,'$1 分钟 · $2 组 · $3 个新纪录'],
+  [/^(.+) — (\d+) reps$/,(m,a,b)=>(DICT[a]!==undefined?DICT[a]:a)+' — '+b+' 次'],
+  [/^(.+) — (\d+) sec$/,(m,a,b)=>(DICT[a]!==undefined?DICT[a]:a)+' — '+b+' 秒'],
+  [/^([\d,]+) steps logged$/,'已记录 $1 步'],
+  [/^start ([\d.]+) kg$/,'起始 $1 kg'],
+  [/^Resting — (.+)$/,(m,a)=>'休息中 — '+(DICT[a]!==undefined?DICT[a]:a)],
+  [/^Rest complete — (.+)$/,(m,a)=>'休息结束 — '+(DICT[a]!==undefined?DICT[a]:a)],
+  [/^([−+])(\d+) s$/,'$1$2 秒'],
+  [/^Step (\d+) of 4$/,'第 $1 步 / 共 4 步'],
+  [/(\d+) sessions$/,'$1 次训练'],
+  [/^(.+) ends here\.$/, (m,a)=> DICT[a]!==undefined ? DICT[a]+'到此结束。' : m],
+];
+
+const DICT = {
+  "40–50 min":"40–50 分钟",
+  "40–55 min":"40–55 分钟",
+  "Holding the breath.":"憋气。",
+  "Estimated time":"预计时长",
+  "Step 1 of 4":"第 1 步 / 共 4 步",
+  "Step 2 of 4":"第 2 步 / 共 4 步",
+  "Step 3 of 4":"第 3 步 / 共 4 步",
+  "Step 4 of 4":"第 4 步 / 共 4 步",
+  "Your profile":"你的资料",
+  "Age":"年龄",
+  "Height (cm)":"身高（厘米）",
+  "Weight (kg)":"体重（公斤）",
+  "Sex":"性别",
+  "Male":"男",
+  "Female":"女",
+  "Continue":"继续",
+  "Back":"返回",
+  "Your equipment":"你的器材",
+  "Bodyweight":"自重",
+  "One 7.5 kg dumbbell":"一只 7.5 公斤哑铃",
+  "Floor":"地板",
+  "Stable chair or bed edge":"稳固的椅子或床沿",
+  "Every session in this program is built around exactly that. Nothing here needs a gym.":"整个计划就是围绕这些器材设计的，全程不需要健身房。",
+  "Your goal":"你的目标",
+  "Build muscle, shoulders and back first":"增肌，优先练肩和背",
+  "Reduce body fat gradually, no crash dieting":"循序渐进减脂，不节食",
+  "Wider shoulders, wider back, tighter waist":"肩更宽、背更厚、腰更紧",
+  "Better proportions and a habit that survives exam weeks":"改善身材比例，养成考试周也能坚持的习惯",
+  "Body recomposition, not weight loss. At 66 kg and 170 cm the scale barely needs to move.":"目标是身体重组，不是减重。170 厘米 66 公斤，体重几乎不需要变动。",
+  "12 weeks starts today":"12 周从今天开始",
+  "Three strength sessions, one core and cardio day, one walking day, two rest days. Every week. Open the app, read one screen, train.":"每周三次力量训练，一次核心加有氧，一次走路，两天完全休息。打开应用，看一屏，然后开练。",
+  "Week 1 Monday":"第 1 周的星期一",
+  "Start week 1":"开始第 1 周",
+  "Today":"今天",
+  "Session":"训练中",
+  "Progress":"进度",
+  "Plan":"计划",
+  "Settings":"设置",
+  "Home":"主页",
+  "Workout":"训练",
+  "Phase 1 — Learn the movements":"阶段一 — 学会动作",
+  "Phase 2 — Build consistency":"阶段二 — 建立规律",
+  "Phase 3 — Progressive overload":"阶段三 — 渐进超负荷",
+  "Phase 4 — Compare and push":"阶段四 — 对比并推进",
+  "Easy to moderate. Never to failure. Form is the only score this fortnight.":"轻到中等强度，绝不做到力竭。这两周唯一的评分标准是动作质量。",
+  "Use the prescribed sets and reps, and record every set honestly.":"按规定的组数次数来做，每一组都如实记录。",
+  "Beat last week using reps, tempo, pauses or harder variations.":"用次数、节奏、顶峰停顿或更难的变式去超越上周。",
+  "Measure against your own week 1 numbers. Harder variations over endless reps.":"和自己第 1 周的数据对比。宁可换更难的变式，也不要无止境地加次数。",
+  "Phases":"训练阶段",
+  "Calendar":"日历",
+  "12-week plan":"12 周计划",
+  "Today's targets":"今日目标",
+  "Protein":"蛋白质",
+  "Steps":"步数",
+  "Sleep":"睡眠",
+  "Set":"输入",
+  "Protein food that actually works here: eggs, chicken, fish, beef, tofu, milk, soy milk, Greek yogurt. Keep the rice.":"实际好用的蛋白质来源：鸡蛋、鸡肉、鱼、牛肉、豆腐、牛奶、豆浆、希腊酸奶。米饭照常吃。",
+  "Where you stand":"当前状态",
+  "Week":"周数",
+  "Sessions this week":"本周已完成",
+  "Weight now":"当前体重",
+  "Streak":"连续天数",
+  "rest days count":"休息日也算",
+  "Start workout":"开始训练",
+  "See progress":"查看进度",
+  "Beginner rules that keep you training: stop on sharp or unusual pain, never trade form for reps, never train through joint pain, no maximal lifting. Chest pain, severe dizziness or breathlessness means stop and get medical help. This app is a training log, not a doctor.":"让新手能一直练下去的几条规矩：出现尖锐或异常疼痛就停；绝不为凑次数牺牲动作；关节痛不硬撑；不做极限重量。若出现胸痛、严重头晕或呼吸困难，立刻停止并就医。本应用是训练记录工具，不是医生。",
+  "Full rest":"完全休息",
+  "Rest is part of the program, not a gap in it. Muscle is built on the days you leave it alone.":"休息是计划的一部分，不是偷懒。肌肉正是在你不练的日子里长出来的。",
+  "Optional: a short walk, some stretching, a real 7–9 hours of sleep.":"可选：散个步、拉伸一下、踏实睡够 7–9 小时。",
+  "Recovery walk":"恢复散步",
+  "No strength training.":"今天不做力量训练。",
+  "Then 5–10 minutes of light stretching or mobility.":"之后做 5–10 分钟轻度拉伸或活动度练习。",
+  "Warm-up, every session":"每次训练的热身",
+  "Sessions":"训练课",
+  "Exercise library":"动作库",
+  "Then rest about 30 seconds and start exercise 1.":"然后休息约 30 秒，开始第 1 个动作。",
+  "Saturday cardio: 30–45 minutes of brisk walking. Indoors, 20–30 minutes of marching in place does the job. Nothing intense is required.":"周六有氧：快走 30–45 分钟。在室内的话，原地踏步 20–30 分钟同样有效。不需要任何高强度内容。",
+  "Run this session":"练这一课",
+  "Start today’s session":"开始今天这一课",
+  "Start today's session":"开始今天这一课",
+  "Workout A":"训练 A",
+  "Workout B":"训练 B",
+  "Core + Cardio":"核心 + 有氧",
+  "Core + cardio":"核心 + 有氧",
+  "priority":"重点",
+  "Walk":"走路",
+  "Rest":"休息",
+  "Core":"核心",
+  "Walk / rest":"走路 / 休息",
+  "Odd weeks open with A, even weeks open with B, so both sessions get hit three times every fortnight.":"单周从 A 开始，双周从 B 开始，这样每两周 A 和 B 各练三次。",
+  "March in place — 60 sec":"原地踏步 — 60 秒",
+  "Arm circles — 30 sec":"绕臂 — 30 秒",
+  "Bodyweight squats — 10 reps":"徒手深蹲 — 10 次",
+  "Glute bridges — 10 reps":"臀桥 — 10 次",
+  "Shoulder mobility — 30 sec":"肩部活动度 — 30 秒",
+  "Easy push-ups — 5 reps":"轻松俯卧撑 — 5 次",
+  "Bodyweight Squat":"徒手深蹲",
+  "Push-up":"俯卧撑",
+  "One-arm Dumbbell Row":"单臂哑铃划船",
+  "One-arm Dumbbell Shoulder Press":"单臂哑铃肩推",
+  "One-arm Dumbbell Lateral Raise":"单臂哑铃侧平举",
+  "Dumbbell Glute Bridge":"哑铃臀桥",
+  "Bulgarian Split Squat":"保加利亚分腿蹲",
+  "One-arm Dumbbell Floor Press":"单臂哑铃地板卧推",
+  "Dumbbell Romanian Deadlift":"哑铃罗马尼亚硬拉",
+  "Dumbbell Biceps Curl":"哑铃二头弯举",
+  "Dumbbell Overhead Triceps Extension":"哑铃颈后臂屈伸",
+  "Plank":"平板支撑",
+  "Reverse Crunch":"反向卷腹",
+  "Dead Bug":"死虫式",
+  "7.5 kg dumbbell":"7.5 公斤哑铃",
+  "7.5 kg dumbbell + floor":"7.5 公斤哑铃 + 地板",
+  "7.5 kg dumbbell + chair/bed":"7.5 公斤哑铃 + 椅子/床",
+  "Bodyweight + chair/bed":"自重 + 椅子/床",
+  "Quadriceps":"股四头肌",
+  "Glutes":"臀大肌",
+  "Chest":"胸大肌",
+  "Front shoulder":"前束三角肌",
+  "Triceps":"三头肌",
+  "Latissimus dorsi":"背阔肌",
+  "Upper back":"上背",
+  "Rear shoulder":"后束三角肌",
+  "Biceps":"二头肌",
+  "Front and side shoulder":"前束与中束三角肌",
+  "Side shoulder (lateral deltoid)":"中束三角肌",
+  "Hamstrings":"腘绳肌",
+  "Adductors":"内收肌",
+  "Lower back":"下背",
+  "Grip":"握力",
+  "Forearms":"前臂",
+  "Deep core":"深层核心",
+  "Abs":"腹肌",
+  "Shoulders":"肩部",
+  "Lower abs":"下腹",
+  "Hip flexors":"髋屈肌",
+  "How to perform":"动作做法",
+  "Form tips":"动作要点",
+  "Common mistakes":"常见错误",
+  "Target muscles":"目标肌群",
+  "When it gets easy":"变轻松之后",
+  "Close":"关闭",
+  "Feet about shoulder width, toes turned out slightly.":"双脚约与肩同宽，脚尖略微外八。",
+  "Push your hips back and down, knees tracking over your toes.":"臀部向后向下坐，膝盖沿脚尖方向走。",
+  "Go as low as you can keep your heels flat and back neutral.":"在脚跟不离地、背部中立的前提下尽量蹲低。",
+  "Drive through the whole foot to stand tall.":"整个脚掌发力站起，身体挺直。",
+  "Chest up, ribs stacked over hips.":"挺胸，肋骨对齐骨盆。",
+  "Knees may travel past the toes, that is fine.":"膝盖超过脚尖是正常的，不用怕。",
+  "Take 2 seconds down, 1 second up.":"下蹲 2 秒，起身 1 秒。",
+  "Heels lifting off the floor.":"脚跟离地。",
+  "Knees collapsing inward.":"膝盖内扣。",
+  "Rounding the lower back at the bottom.":"蹲到底时腰部弓起。",
+  "When 3 × 20 feels controlled and easy, hold the 7.5 kg dumbbell at your chest.":"当 3 组 20 次做得又稳又轻松时，抱着 7.5 公斤哑铃在胸前做。",
+  "Hands slightly wider than shoulders, under the chest line.":"双手略宽于肩，位于胸线下方。",
+  "Body in one straight line from head to heels.":"从头到脚跟保持一条直线。",
+  "Lower until your chest is a fist from the floor.":"下放到胸口离地约一拳。",
+  "Press back up without letting the hips sag.":"推起过程中臀部不要塌下去。",
+  "Elbows go back at roughly 45°, not straight out.":"手肘约 45 度向后，不要完全外展。",
+  "Squeeze glutes and brace the stomach the whole set.":"整组保持夹臀收腹。",
+  "Knee version keeps the same straight line from head to knees.":"跪姿版本同样要保持头到膝盖成一直线。",
+  "Hips sagging or piking up.":"臀部下塌或撅起。",
+  "Head dropping forward first.":"先低头探脖子。",
+  "Half reps with no chest depth.":"半程动作，胸口没有下到位。",
+  "Too hard? Do knee push-ups. Once 3 × 15 is easy, lower for 3 slow seconds instead of adding reps.":"太难就做跪姿俯卧撑。3 组 15 次变轻松后，把下放放慢到 3 秒，而不是继续加次数。",
+  "Put one hand on a chair or bed edge, feet staggered, back flat.":"一手撑在椅子或床沿，两脚前后分开，背部保持平直。",
+  "Let the dumbbell hang, arm straight, shoulder relaxed.":"哑铃自然下垂，手臂伸直，肩膀放松。",
+  "Pull the elbow backward toward your hip.":"手肘向后拉向髋部。",
+  "Lower under control until the arm is fully straight.":"控制着下放，直到手臂完全伸直。",
+  "Pull with the elbow, not the hand.":"用手肘发力，不是用手拉。",
+  "Keep the shoulder pulled down and back at the top.":"顶端保持肩胛下沉后收。",
+  "Do not rotate your torso to help the weight up.":"不要靠转身体借力。",
+  "Yanking with the lower back.":"用腰猛甩。",
+  "Elbow flaring out sideways.":"手肘往外张。",
+  "Cutting the bottom of the rep short.":"底端不放到位。",
+  "At the top of the range, add a 1 second squeeze at the top before adding reps.":"做到次数上限后，先在顶端加 1 秒收缩停顿，再考虑加次数。",
+  "Stand tall, dumbbell at shoulder height, palm facing forward.":"站直，哑铃举到肩高，掌心朝前。",
+  "Brace your stomach and squeeze your glutes.":"收紧腹部并夹紧臀部。",
+  "Press straight up until the arm is locked overhead.":"垂直向上推到手臂在头顶锁定。",
+  "Lower slowly back to shoulder height.":"缓慢下放回肩高。",
+  "Ribs down, do not lean back to press.":"肋骨下沉，不要靠后仰推起。",
+  "Wrist stacked over the elbow.":"手腕保持在手肘正上方。",
+  "Free hand on your hip or a wall for balance.":"空着的手扶髋或扶墙保持平衡。",
+  "Bouncing with the knees.":"用膝盖弹震借力。",
+  "Arching the lower back.":"腰部过度反弓。",
+  "Stopping halfway down.":"下放只做一半。",
+  "Add a 1 second pause at the bottom, or press slower, before chasing more reps.":"先在底端加 1 秒停顿或放慢推起速度，再去追次数。",
+  "Stand tall, dumbbell by your side, slight bend in the elbow.":"站直，哑铃置于体侧，手肘略微弯曲。",
+  "Raise the arm out to the side, leading with the elbow.":"手臂向侧上方抬起，用手肘带动。",
+  "Stop at about shoulder height.":"抬到约肩高即停。",
+  "Lower slowly, 3 seconds, all the way down.":"用 3 秒缓慢下放到底。",
+  "Zero swing, if the body moves the weight is too heavy for that rep.":"零借力，身体一晃就说明这一次太重了。",
+  "Keep the shoulder pulled away from the ear.":"肩膀远离耳朵，不要耸肩。",
+  "Half range with control is a valid rep, log it honestly.":"有控制的半程也算有效次数，如实记录即可。",
+  "Using the hips as a slingshot.":"用髋部甩起来。",
+  "Shrugging the weight up.":"耸肩把重量顶上去。",
+  "Going above shoulder height.":"抬过肩高。",
+  "7.5 kg is heavy for this one. Cut reps or range before you swing. Slow lowering beats extra reps.":"7.5 公斤对这个动作偏重。宁可减次数或减小幅度，也不要甩。放慢下放比多做几次更有价值。",
+  "Lie on your back, knees bent, heels close to your glutes.":"仰卧屈膝，脚跟靠近臀部。",
+  "Rest the dumbbell carefully across your hips and hold it.":"把哑铃小心放在髋部并用手扶稳。",
+  "Drive your heels down and lift the hips until the body is a straight line.":"脚跟下压，把髋顶起到身体成一直线。",
+  "Lower until the glutes lightly touch the floor.":"下放到臀部轻触地面。",
+  "Squeeze the glutes hard at the top for a full second.":"顶端用力夹臀满一秒。",
+  "Ribs down, do not arch the lower back to get higher.":"肋骨下沉，不要靠塌腰顶得更高。",
+  "Place and remove the dumbbell gently, both hands.":"双手轻放、轻取哑铃。",
+  "Pushing through the toes.":"用脚尖发力。",
+  "Hyperextending the lower back at the top.":"顶端腰部过度反弓。",
+  "Rushing the reps.":"动作做得太快。",
+  "Add a 2 second squeeze at the top, then try single-leg with no weight.":"先在顶端加 2 秒收缩，之后尝试无负重单腿版本。",
+  "Stand about one long stride in front of a chair or bed.":"站在椅子或床前约一大步的位置。",
+  "Rest the top of your back foot on it.":"把后脚脚背搭在上面。",
+  "Lower straight down until the front thigh is near parallel.":"垂直下蹲到前腿大腿接近与地面平行。",
+  "Drive through the front foot to stand.":"前脚发力站起。",
+  "Most of your weight stays on the front leg.":"体重主要压在前腿上。",
+  "Small lean forward is fine, keep the back flat.":"稍微前倾没问题，背保持平直。",
+  "Balance shaky? Fingertips on a wall.":"站不稳就用指尖扶墙。",
+  "Stepping too short so the knee jams forward.":"步子太小导致膝盖顶得太前。",
+  "Pushing off the back foot.":"用后脚蹬地借力。",
+  "Front heel lifting.":"前脚跟离地。",
+  "Once 3 × 12 per leg is steady, hold the 7.5 kg dumbbell in the opposite hand.":"每腿 3 组 12 次做稳之后，用对侧手拿 7.5 公斤哑铃。",
+  "If balance is a problem, do reverse lunges instead, same reps.":"如果平衡是问题，改做后撤箭步蹲，次数不变。",
+  "Lie on your back, knees bent, dumbbell in one hand over the chest.":"仰卧屈膝，单手持哑铃置于胸口上方。",
+  "Elbow at roughly 45° from your body.":"手肘与身体约成 45 度。",
+  "Lower until the upper arm touches the floor.":"下放到大臂触地。",
+  "Press back up over the chest line.":"推回到胸线正上方。",
+  "Keep the wrist stacked over the elbow.":"手腕保持在手肘正上方。",
+  "Light touch of the floor, do not bounce.":"轻触地面，不要弹震。",
+  "Free hand out to the side for stability.":"空着的手向侧展开保持稳定。",
+  "Elbow flared straight out at 90°.":"手肘完全外展成 90 度。",
+  "Dropping the arm hard onto the floor.":"手臂重重砸向地面。",
+  "Twisting the torso to press.":"扭动躯干借力推起。",
+  "Add a 1 second pause with the elbow resting on the floor.":"在手肘触地的位置加 1 秒停顿。",
+  "Stand tall holding the dumbbell in front of your thighs.":"站直，哑铃置于大腿前方。",
+  "Push your hips backward, knees only slightly bent.":"臀部向后推，膝盖只需微屈。",
+  "Slide the dumbbell down your legs until you feel a hamstring stretch.":"哑铃贴着腿下滑，直到腘绳肌有明显拉伸感。",
+  "Drive the hips forward to stand tall.":"顶髋向前站直。",
+  "Hips move back, this is a hinge, not a squat.":"髋部向后走，这是髋屈伸，不是深蹲。",
+  "Back stays flat the whole time, chest proud.":"全程背部平直，挺胸。",
+  "The dumbbell stays close to your legs.":"哑铃始终贴近腿部。",
+  "Rounding the lower back instead of hinging.":"用弓腰代替屈髋。",
+  "Bending the knees like a squat.":"像深蹲一样过度屈膝。",
+  "Going deeper than your hamstrings allow.":"下放超过腘绳肌柔韧度的范围。",
+  "Slow the lowering to 4 seconds, then try single-leg for a real balance and hamstring challenge.":"把下放放慢到 4 秒，之后尝试单腿版本，对平衡和腘绳肌都是真正的挑战。",
+  "Single-leg feels unstable? Use both legs, same reps.":"单腿站不稳就用双腿做，次数不变。",
+  "Stand tall, dumbbell at your side, palm forward.":"站直，哑铃置于体侧，掌心朝前。",
+  "Curl up without moving the elbow forward.":"弯举时手肘不要往前跑。",
+  "Squeeze at the top.":"顶端收紧。",
+  "Lower slowly until the arm is fully straight.":"缓慢下放到手臂完全伸直。",
+  "Elbow pinned to your ribs.":"手肘紧贴肋侧。",
+  "No body swing, the biceps does the work.":"不要甩身体，让二头肌发力。",
+  "Full straight arm at the bottom every rep.":"每一次都要在底端把手臂完全伸直。",
+  "Rocking the torso back.":"上身后仰晃动。",
+  "Half reps at the bottom.":"底端只做半程。",
+  "Rushing the lowering phase.":"下放阶段太快。",
+  "Lower for 3 seconds, then add a pause halfway down.":"下放放慢到 3 秒，之后在中途加一个停顿。",
+  "Hold the dumbbell with both hands overhead.":"双手持哑铃举过头顶。",
+  "Keep the elbows pointing forward and close together.":"手肘朝前并保持靠拢。",
+  "Lower the weight behind your head by bending the elbows only.":"只弯曲手肘，把哑铃放到头后。",
+  "Press back up until the arms are straight.":"推起到手臂完全伸直。",
+  "Upper arms stay still, only the forearms move.":"大臂固定不动，只有前臂在动。",
+  "Ribs down, do not arch the back.":"肋骨下沉，不要反弓背部。",
+  "Control it behind the head, no dropping.":"在头后要控制住，不能砸下去。",
+  "Elbows flaring wide.":"手肘外张过大。",
+  "Lower back arching.":"腰部反弓。",
+  "Using the shoulders to lift.":"用肩膀代替三头发力。",
+  "Pause 1 second at the bottom stretch, then slow the lowering to 3 seconds.":"在底端拉伸位停 1 秒，之后把下放放慢到 3 秒。",
+  "Forearms on the floor, elbows under the shoulders.":"前臂撑地，手肘在肩膀正下方。",
+  "Body in one straight line, feet hip width.":"身体成一直线，双脚与髋同宽。",
+  "Brace the stomach and squeeze the glutes.":"收紧腹部并夹紧臀部。",
+  "Breathe normally and hold.":"正常呼吸并保持。",
+  "Push the floor away with the forearms.":"用前臂把地面推开。",
+  "Tuck the tailbone slightly, no sagging.":"尾骨微微内收，不要塌腰。",
+  "Stop when the form breaks, not when the timer ends.":"动作变形就停，而不是等计时结束。",
+  "Hips sagging toward the floor.":"臀部下沉。",
+  "Butt in the air.":"臀部撅得太高。",
+  "Holding your breath.":"憋气。",
+  "Past 60 seconds, switch to a harder version, lift one foot, before adding time.":"超过 60 秒后，改做更难的版本（比如抬起一只脚），而不是继续加时间。",
+  "Lie on your back, hands by your hips, knees bent.":"仰卧，双手放在髋侧，屈膝。",
+  "Curl the knees toward your chest, lifting the hips slightly.":"把膝盖卷向胸口，髋部微微离地。",
+  "Pause and feel the lower abs.":"停顿一下，感受下腹发力。",
+  "Lower the legs slowly without touching the floor.":"缓慢放下双腿，不要触地。",
+  "Move the hips, not just the legs.":"动的是髋部，不只是腿。",
+  "Lower back stays pressed to the floor.":"腰部始终贴紧地面。",
+  "Small controlled range beats big swinging.":"小幅度有控制胜过大幅度乱甩。",
+  "Swinging the legs for momentum.":"甩腿借力。",
+  "Pulling with the neck.":"用脖子发力。",
+  "Feet dropping to the floor between reps.":"两次之间双脚落地。",
+  "Slow the lowering to 3 seconds, then pause with the hips off the floor.":"把下放放慢到 3 秒，之后在髋部离地的位置停顿。",
+  "Lie on your back, arms straight up, knees bent over the hips.":"仰卧，手臂垂直向上，膝盖屈于髋部上方。",
+  "Press the lower back flat into the floor.":"腰部压平贴紧地面。",
+  "Extend one arm overhead and the opposite leg straight out.":"一侧手臂过头伸展，同时对侧腿伸直。",
+  "Return slowly and switch sides.":"缓慢收回并换边。",
+  "The lower back must not lift, that is the whole exercise.":"腰不能离地，这就是这个动作的全部意义。",
+  "Exhale as you extend.":"伸展时呼气。",
+  "Go slow, this is a control drill.":"慢慢来，这是控制类练习。",
+  "Lower back arching off the floor.":"腰部离地反弓。",
+  "Slow each rep to 4 seconds, then hold the extended position for 2 seconds.":"每次动作放慢到 4 秒，之后在伸展位保持 2 秒。",
+  "Body":"身体",
+  "Weight":"体重",
+  "Waist":"腰围",
+  "Entries":"记录数",
+  "Log measurements":"记录围度",
+  "Weight trend":"体重趋势",
+  "Waist trend":"腰围趋势",
+  "Two entries and this becomes a chart.":"记录满两次就会出现图表。",
+  "Scale weight alone tells you almost nothing here. Weight flat, waist down, strength up is exactly the result you are training for.":"单看体重几乎说明不了什么。体重不动、腰围下降、力量上升，正是你要的结果。",
+  "Strength — first vs best set":"力量 — 首次 vs 最佳",
+  "not logged yet":"尚未记录",
+  "Consistency":"规律性",
+  "Training days":"训练天数",
+  "Weekly summaries":"每周小结",
+  "Session log":"训练记录",
+  "Weekly is plenty. Same time of day, same conditions.":"一周一次就够。固定时间、固定条件测量。",
+  "Waist (cm)":"腰围（厘米）",
+  "Chest (cm)":"胸围（厘米）",
+  "Arm (cm)":"手臂围（厘米）",
+  "Thigh (cm)":"大腿围（厘米）",
+  "Save entry":"保存记录",
+  "Cancel":"取消",
+  "Save":"保存",
+  "Protein today (g)":"今日蛋白质（克）",
+  "Steps today":"今日步数",
+  "Sleep last night (hours)":"昨晚睡眠（小时）",
+  "Nine questions. Then I write your summary for next week.":"九个问题，之后我给你写下周的小结。",
+  "1. Strength sessions completed":"1. 完成的力量训练次数",
+  "2. Average body weight (kg)":"2. 平均体重（公斤）",
+  "3. Waist (cm)":"3. 腰围（厘米）",
+  "4. Energy level":"4. 精力水平",
+  "5. How hard was training":"5. 训练强度感受",
+  "6. Any pain":"6. 有没有疼痛",
+  "7. Which exercise improved most":"7. 哪个动作进步最大",
+  "8. Sleep quality":"8. 睡眠质量",
+  "9. Hit your protein most days":"9. 大部分日子达到蛋白质目标了吗",
+  "Low":"低",
+  "Okay":"一般",
+  "High":"高",
+  "Easy":"轻松",
+  "Right":"刚好",
+  "Too hard":"太难",
+  "None":"没有",
+  "Mild":"轻微",
+  "Real pain":"明显疼痛",
+  "Poor":"差",
+  "No":"没有",
+  "Mostly":"多数有",
+  "Yes":"有",
+  "Save check-in":"保存复盘",
+  "Later":"稍后再说",
+  "Start check-in":"开始复盘",
+  "e.g. push-ups":"例如 俯卧撑",
+  "In session":"训练中",
+  "Warm-up":"热身",
+  "About six minutes. This is most of your injury insurance, do not skip it.":"大约六分钟。这是你防伤的主要保险，别跳过。",
+  "Warm-up done":"热身完成",
+  "Cancel this session":"取消本次训练",
+  "View instructions":"查看动作说明",
+  "Skip exercise":"跳过此动作",
+  "Finish workout":"结束训练",
+  "How did it feel":"感觉如何",
+  "Normal":"正常",
+  "Hard":"吃力",
+  "Complete set ✓":"完成本组 ✓",
+  "Go":"前往",
+  "Redo":"重做",
+  "All sets done — next exercise":"本动作已完成 — 下一个",
+  "Skip rest":"跳过休息",
+  "Next set":"下一组",
+  "Workout complete 🎉":"训练完成 🎉",
+  "Duration":"用时",
+  "Exercises":"动作数",
+  "Total sets":"总组数",
+  "Personal records":"个人纪录",
+  "New bests":"新纪录",
+  "Done":"完成",
+  "min":"分钟",
+  "GO":"开始",
+  "Language":"语言",
+  "English":"English",
+  "Profile":"个人资料",
+  "Start weight":"起始体重",
+  "Program start (Monday of week 1)":"计划起始日（第 1 周的星期一）",
+  "Daily targets":"每日目标",
+  "Protein low (g)":"蛋白质下限（克）",
+  "Protein high (g)":"蛋白质上限（克）",
+  "Steps low":"步数下限",
+  "Steps high":"步数上限",
+  "Equipment":"器材",
+  "Level 1":"等级 1",
+  "7.5 kg + bodyweight":"7.5 公斤哑铃 + 自重",
+  "Level 2":"等级 2",
+  "bands, bench, more weight":"弹力带、卧推凳、更多重量",
+  "Level 2 switches the progression advice from tempo tricks to adding load. The session structure stays the same.":"等级 2 会把进阶建议从节奏技巧改为增加负重，训练结构保持不变。",
+  "Rest timers":"休息计时",
+  "Defaults: 90 s for big lifts, 60 s for the small ones, 45–60 s for lateral raises.":"默认值：大动作 90 秒，小动作 60 秒，侧平举 45–60 秒。",
+  "Data":"数据",
+  "Copy my data as backup":"复制数据作为备份",
+  "Erase everything and restart":"清空全部并重新开始",
+  "Everything is stored on this device only. Nothing leaves your phone.":"所有数据只存在这台设备上，不会离开你的手机。",
+  "Good":"良好",
+};
+
+/* ---------------- app shell ---------------- */
+function render(){
+  if(!S.onboarded){ renderOnboarding(); return; }
+  if(S.active){ renderRunner(); return; }
+  const views={home:viewHome, workout:viewWorkout, progress:viewProgress, plan:viewPlan, settings:viewSettings};
+  const d=today(), w=weekNumber(d), ph=phaseFor(w);
+  $('#app').innerHTML = `
+  <header>
+    <div class="eyebrow"><span>${esc(fmtDate(d))}</span><span>Week ${Math.min(w,12)} / 12</span></div>
+    <h1>${esc(headline(TAB))}<small>${esc(ph.name)}</small></h1>
+  </header>
+  <div class="taper"><i></i></div>
+  <main class="fade">${views[TAB]()}</main>
+  <nav>
+    ${navBtn('home','⌂','Home')}${navBtn('workout','◼','Workout')}${navBtn('progress','◢','Progress')}
+    ${navBtn('plan','▦','Plan')}${navBtn('settings','◌','Settings')}
+  </nav>`;
+  bindAll();
+  if(SHEET) mountSheet();
+}
+function headline(t){
+  return {home:'Today', workout:'Session', progress:'Progress', plan:'12-week plan', settings:'Settings'}[t];
+}
+function navBtn(id,i,t){
+  return `<button data-tab="${id}" class="${TAB===id?'on':''}"><span class="i">${i}</span><span class="t">${t}</span></button>`;
+}
+function go(t){ TAB=t; SHEET=null; render(); window.scrollTo(0,0); }
+
+/* ---------------- HOME ---------------- */
+function viewHome(){
+  const d=today(), w=weekNumber(d), plan=dayPlan(w,d.getDay()), lg=todayLog();
+  const done=sessionOn(ymd(d));
+  const ws=weekStats(w), st=streak(), tg=S.targets;
+  const cw=currentWeight(), sw=S.profile.startWeight;
+  const hour=d.getHours();
+  const greet = hour<12?'Good morning':(hour<18?'Good afternoon':'Good evening');
+
+  return `
+  <div class="sec">
+    <div class="small muted" style="margin-bottom:10px">${greet}, Calvin.</div>
+    ${heroCard(plan, done)}
+  </div>
+
+  <div class="sec">
+    <div class="sec-h">Today's targets</div>
+    <div class="card stack">
+      ${targetRow('Protein', lg.protein, tg.proteinLo, tg.proteinHi, 'g', 'protein')}
+      ${targetRow('Steps', lg.steps, tg.stepsLo, tg.stepsHi, '', 'steps')}
+      ${targetRow('Sleep', lg.sleep, tg.sleepLo, tg.sleepHi, 'h', 'sleep')}
+      <div class="tiny muted">Protein food that actually works here: eggs, chicken, fish, beef, tofu, milk, soy milk, Greek yogurt. Keep the rice.</div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h">Where you stand</div>
+    <div class="grid2">
+      <div class="card"><div class="label">Week</div><div class="big num">${Math.min(w,12)}<span style="font-size:15px;color:var(--ink-3)">/12</span></div></div>
+      <div class="card"><div class="label">Sessions this week</div><div class="big num">${ws.done}<span style="font-size:15px;color:var(--ink-3)">/${ws.planned}</span></div></div>
+      <div class="card"><div class="label">Weight now</div><div class="big num">${cw.toFixed(1)}<span style="font-size:14px;color:var(--ink-3)">kg</span></div><div class="tiny muted">start ${sw.toFixed(1)} kg</div></div>
+      <div class="card"><div class="label">Streak</div><div class="big num">${st}</div><div class="tiny muted">rest days count</div></div>
+    </div>
+  </div>
+
+  ${(d.getDay()===0 && !S.checkins.find(c=>c.week===w)) ? `
+  <div class="sec"><div class="card">
+    <div class="mid">Week ${w} check-in</div>
+    <div class="small muted" style="margin:4px 0 12px">Nine quick questions, then I write your summary for next week.</div>
+    <button class="btn dark" data-sheet="checkin">Start check-in</button>
+  </div></div>`:''}
+
+  <div class="sec">
+    <div class="note">Beginner rules that keep you training: stop on sharp or unusual pain, never trade form for reps, never train through joint pain, no maximal lifting. Chest pain, severe dizziness or breathlessness means stop and get medical help. This app is a training log, not a doctor.</div>
+  </div>`;
+}
+
+function heroCard(plan, done){
+  if(plan.type==='REST'){
+    return `<div class="hero rest-hero"><div class="body">
+      <div class="label" style="color:#b7ded4">Today</div>
+      <div class="kind">Full rest</div>
+      <div class="meta">Rest is part of the program, not a gap in it. Muscle is built on the days you leave it alone.</div>
+      <div style="margin-top:14px" class="small">Optional: a short walk, some stretching, a real 7–9 hours of sleep.</div>
+    </div></div>`;
+  }
+  if(plan.type==='RECOVERY'){
+    const lg=todayLog();
+    return `<div class="hero rest-hero"><div class="body">
+      <div class="label" style="color:#b7ded4">Today</div>
+      <div class="kind">Recovery walk</div>
+      <div class="meta">No strength training. Target ${S.targets.stepsLo.toLocaleString()}–${S.targets.stepsHi.toLocaleString()} steps, or 30 minutes of walking if that is easier to measure.</div>
+      <div style="margin-top:14px;color:#dff0eb" class="small">Then 5–10 minutes of light stretching or mobility.</div>
+      <div style="margin-top:14px">${bar(lg.steps/S.targets.stepsHi*100,'pine')}</div>
+      <div class="tiny num" style="color:#b7ded4;margin-top:6px">${lg.steps.toLocaleString()} steps logged</div>
+    </div></div>`;
+  }
+  const W=WORKOUTS[plan.type];
+  if(done){
+    const s=sessionOn(ymd(today()));
+    return `<div class="hero"><div class="body">
+      <div class="label" style="color:#98a3ad">Today — complete</div>
+      <div class="kind">${esc(W.title)} ✓</div>
+      <div class="meta">${Math.round(s.durationSec/60)} min · ${s.totalSets} sets · ${s.prs.length} personal record${s.prs.length===1?'':'s'}</div>
+      <div style="margin-top:16px"><button class="btn ghost" style="border-color:#3a424b;color:#fff" data-tab="progress">See progress</button></div>
+    </div></div>`;
+  }
+  const list=W.exs.map(id=>`<li>${esc(EX[id].name)}</li>`).join('');
+  return `<div class="hero"><div class="body">
+    <div class="label" style="color:#98a3ad">Today</div>
+    <div class="kind">${esc(W.title)}</div>
+    <div class="meta">${W.dur} · ${W.exs.length} exercises · warm-up included</div>
+    <ol>${list}</ol>
+    <div style="margin-top:16px"><button class="btn" data-start="${plan.type}">Start workout</button></div>
+  </div></div>`;
+}
+
+function targetRow(name, val, lo, hi, unit, key){
+  const v = val==null? 0 : val;
+  const pct = v/hi*100;
+  const cls = key==='steps'?'pine':(key==='sleep'?'amber':'');
+  return `<div>
+    <div class="row"><div class="small" style="font-weight:600">${name}</div>
+      <div class="small num muted">${val==null?'—':(unit==='h'?v:v.toLocaleString())}${unit} / ${unit==='h'?lo+'–'+hi:lo.toLocaleString()+'–'+hi.toLocaleString()}${unit}</div></div>
+    <div style="margin-top:6px">${bar(pct,cls)}</div>
+    <div style="margin-top:8px" class="row">
+      <div class="seg" style="width:100%">
+        ${quickBtns(key)}
+        <button data-log="${key}" data-mode="set" class="btn sm ghost">Set</button>
+      </div>
+    </div>
+  </div>`;
+}
+function quickBtns(key){
+  const opts = key==='protein'? [10,20,30] : key==='steps'? [1000,2000,5000] : [];
+  return opts.map(n=>`<button data-log="${key}" data-add="${n}">+${n>=1000?(n/1000)+'k':n}</button>`).join('');
+}
+
+/* ---------------- WORKOUT (library + today) ---------------- */
+function viewWorkout(){
+  const d=today(), w=weekNumber(d), plan=dayPlan(w,d.getDay());
+  const cards = ['A','B','C'].map(code=>{
+    const W=WORKOUTS[code], isToday = plan.type===code;
+    const list=W.exs.map(id=>{
+      const e=EX[id], n=setsFor(code,id);
+      return `<div class="row" style="padding:8px 0;border-top:1px solid var(--line)">
+        <div class="small" style="flex:1">${esc(e.name)}${e.prio?' <span class="pill c-a">priority</span>':''}</div>
+        <div class="tiny num muted">${n}×${e.lo}–${e.hi}${e.time?'s':''}${e.side?' /side':''}</div>
+      </div>`;
+    }).join('');
+    return `<div class="card">
+      <div class="row"><div class="mid">${esc(W.title)}</div><span class="pill ${W.cls}">${W.dur}</span></div>
+      ${list}
+      <div style="margin-top:14px" class="row" ${''}>
+        <button class="btn ${isToday?'':'ghost'}" data-start="${code}">${isToday?'Start today\u2019s session':'Run this session'}</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  return `
+  <div class="sec">
+    <div class="sec-h">Warm-up, every session</div>
+    <div class="card"><div class="stack small">${WARMUP.map(x=>'<div>· '+esc(x)+'</div>').join('')}</div>
+    <div class="tiny muted" style="margin-top:10px">Then rest about 30 seconds and start exercise 1.</div></div>
+  </div>
+  <div class="sec">
+    <div class="sec-h">Sessions</div>
+    <div class="stack">${cards}</div>
+  </div>
+  <div class="sec">
+    <div class="sec-h">Exercise library</div>
+    <div class="stack">${Object.keys(EX).map(id=>`
+      <button class="card row" data-sheet="ex:${id}" style="text-align:left">
+        <div><div class="small" style="font-weight:600">${esc(EX[id].name)}</div>
+        <div class="tiny muted">${esc(EX[id].mus.slice(0,3).join(' · '))}</div></div>
+        <div class="muted">›</div></button>`).join('')}</div>
+  </div>
+  <div class="sec">
+    <div class="note blue">Saturday cardio: 30–45 minutes of brisk walking. Indoors, 20–30 minutes of marching in place does the job. Nothing intense is required.</div>
+  </div>`;
+}
+
+/* ---------------- PLAN ---------------- */
+function viewPlan(){
+  const now=today(), cw=weekNumber(now), start=mondayOf(parseYmd(S.profile.startDate));
+  let weeks='';
+  for(let w=1;w<=12;w++){
+    let cells='';
+    for(let i=0;i<7;i++){
+      const d=new Date(start); d.setDate(d.getDate()+(w-1)*7+i);
+      const dow=d.getDay(), t=dayPlan(w,dow).type;
+      const key = t==='A'?'A':t==='B'?'B':t==='C'?'C':t==='RECOVERY'?'R':'X';
+      const label = t==='A'?'A':t==='B'?'B':t==='C'?'Core':t==='RECOVERY'?'Walk':'Rest';
+      const isToday = ymd(d)===ymd(now);
+      const done = !!sessionOn(ymd(d));
+      cells+=`<div class="dwrap"><div class="d ${key} ${isToday?'today':''}">${label}</div>${done?'<span class="tick">✓</span>':''}</div>`;
+    }
+    const st=weekStats(w), ph=phaseFor(w);
+    weeks+=`<div class="wk" style="margin-bottom:6px">
+      <div class="wn">W${w}</div>${cells}</div>`;
+    if(w===2||w===4||w===8||w===12){
+      weeks+=`<div class="tiny muted" style="margin:8px 0 14px">${esc(ph.name)} ends here.</div>`;
+    }
+  }
+  const phases = PHASES.map(p=>{
+    const on = cw>=p.w[0]&&cw<=p.w[1];
+    return `<div class="card" style="${on?'border-color:var(--ink);border-width:2px':''}">
+      <div class="row"><div class="mid">${esc(p.name)}</div><span class="pill">W${p.w[0]}–${p.w[1]}</span></div>
+      <div class="small muted" style="margin-top:6px">${esc(p.goal)}</div></div>`;
+  }).join('');
+
+  return `
+  <div class="sec">
+    <div class="sec-h">Calendar</div>
+    <div class="wk" style="margin-bottom:8px"><div></div>${(isZH()?DSH_ZH:DSH).map(x=>`<div class="wn" style="text-align:center">${x}</div>`).join('')}</div>
+    ${weeks}
+    <div class="legend" style="margin-top:10px">
+      <span class="chip c-a">A</span><span class="chip c-b">B</span><span class="chip c-core">Core + cardio</span>
+      <span class="chip c-rest">Walk / rest</span>
+    </div>
+    <div class="tiny muted" style="margin-top:10px">Odd weeks open with A, even weeks open with B, so both sessions get hit three times every fortnight.</div>
+  </div>
+  <div class="sec">
+    <div class="sec-h">Phases</div>
+    <div class="stack">${phases}</div>
+  </div>`;
+}
+
+/* ---------------- PROGRESS ---------------- */
+function sparkline(vals, color){
+  if(vals.length<2) return `<div class="tiny muted">Two entries and this becomes a chart.</div>`;
+  const w=300,h=100, min=Math.min(...vals), max=Math.max(...vals), span=(max-min)||1;
+  const pts=vals.map((v,i)=>[ (i/(vals.length-1))*w, h - ((v-min)/span)*(h-14) - 7 ]);
+  const path=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
+  const dots=pts.map(p=>`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="3" fill="${color}"/>`).join('');
+  return `<svg class="chart" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">
+    <path d="${path}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+    ${dots}</svg>
+  <div class="row tiny muted num"><span>${min.toFixed(1)}</span><span>${max.toFixed(1)}</span></div>`;
+}
+function barsChart(items){
+  return `<div class="stack" style="gap:8px">${items.map(it=>`
+    <div><div class="row tiny"><span>${esc(it.label)}</span><span class="num muted">${it.text}</span></div>
+    <div style="margin-top:4px">${bar(it.pct, it.cls||'')}</div></div>`).join('')}</div>`;
+}
+function viewProgress(){
+  const m=S.measures, w=weekNumber(today());
+  const weights=m.filter(x=>x.weight).map(x=>x.weight);
+  const waists=m.filter(x=>x.waist).map(x=>x.waist);
+  const last=latestMeasure();
+
+  // strength: best set per tracked lift
+  const tracked=['pushup','row','press','squat','bss','lateral','floorpress','rdl'];
+  const strength=tracked.map(id=>{
+    const first=firstReps(id), best=S.bests[id];
+    if(!best) return `<div class="row" style="padding:9px 0;border-top:1px solid var(--line)">
+      <div class="small">${esc(EX[id].name)}</div><div class="tiny muted">not logged yet</div></div>`;
+    const delta = first? best-first : 0;
+    return `<div class="row" style="padding:9px 0;border-top:1px solid var(--line)">
+      <div class="small" style="flex:1">${esc(EX[id].name)}</div>
+      <div class="num small">${first?first+' → ':''}<b>${best}</b>${EX[id].time?'s':''}
+        ${delta>0?`<span style="color:var(--pine)"> +${delta}</span>`:''}</div></div>`;
+  }).join('');
+
+  // consistency
+  const totalSessions=S.sessions.length;
+  const totalDays=new Set(S.sessions.map(s=>s.date)).size;
+  const weeksBars=[];
+  for(let i=Math.max(1,w-5);i<=w;i++){
+    const st=weekStats(i);
+    weeksBars.push({label:'Week '+i, text:st.done+'/'+st.planned, pct:st.planned?st.done/st.planned*100:0, cls:'pine'});
+  }
+
+  return `
+  <div class="sec">
+    <div class="sec-h">Body</div>
+    <div class="card">
+      <div class="grid3">
+        <div><div class="label">Weight</div><div class="mid num">${(last&&last.weight?last.weight:S.profile.weight).toFixed(1)}<span class="tiny muted">kg</span></div></div>
+        <div><div class="label">Waist</div><div class="mid num">${last&&last.waist?last.waist.toFixed(1):'—'}<span class="tiny muted">cm</span></div></div>
+        <div><div class="label">Entries</div><div class="mid num">${m.length}</div></div>
+      </div>
+      <div style="margin-top:14px"><button class="btn ghost" data-sheet="measure">Log measurements</button></div>
+    </div>
+    <div class="card">
+      <div class="label">Weight trend</div>
+      ${sparkline(weights,'#1f37d8')}
+      <div class="label" style="margin-top:16px">Waist trend</div>
+      ${sparkline(waists,'#0d6f5c')}
+      <div class="note pine" style="margin-top:14px">Scale weight alone tells you almost nothing here. Weight flat, waist down, strength up is exactly the result you are training for.</div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h">Strength — first vs best set</div>
+    <div class="card">${strength}</div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h">Consistency</div>
+    <div class="card">
+      <div class="grid3">
+        <div><div class="label">Streak</div><div class="mid num">${streak()}</div></div>
+        <div><div class="label">Sessions</div><div class="mid num">${totalSessions}</div></div>
+        <div><div class="label">Training days</div><div class="mid num">${totalDays}</div></div>
+      </div>
+      <div style="margin-top:16px">${barsChart(weeksBars)}</div>
+    </div>
+  </div>
+
+  ${S.checkins.length?`<div class="sec"><div class="sec-h">Weekly summaries</div>
+    <div class="stack">${[...S.checkins].reverse().map(c=>`<div class="card">
+      <div class="row"><div class="mid">Week ${c.week}</div><span class="pill">${c.workouts} sessions</span></div>
+      <div class="small" style="margin-top:8px">${esc(c.summary)}</div></div>`).join('')}</div></div>`:''}
+
+  ${S.sessions.length?`<div class="sec"><div class="sec-h">Session log</div>
+    <div class="card">${[...S.sessions].reverse().slice(0,12).map(s=>`
+      <div class="row" style="padding:9px 0;border-top:1px solid var(--line)">
+        <div class="small">${esc(s.date)} · ${esc(WORKOUTS[s.type]?WORKOUTS[s.type].title:s.type)}</div>
+        <div class="tiny num muted">${Math.round(s.durationSec/60)}m · ${s.totalSets} sets${s.prs.length?' · '+s.prs.length+' PR':''}</div>
+      </div>`).join('')}</div></div>`:''}`;
+}
+function firstReps(id){
+  for(const s of S.sessions){ const set=s.sets.find(x=>x.ex===id); if(set) return set.reps; }
+  return null;
+}
+
+/* ---------------- SETTINGS ---------------- */
+function viewSettings(){
+  const p=S.profile;
+  return `
+  <div class="sec">
+    <div class="sec-h">Language</div>
+    <div class="card"><div class="seg">
+      <button data-lang="en" class="${S.lang!=='zh'?'on':''}">English</button>
+      <button data-lang="zh" class="${S.lang==='zh'?'on':''}">中文</button>
+    </div></div>
+  </div>
+  <div class="sec">
+    <div class="sec-h">Profile</div>
+    <div class="card stack">
+      <div class="grid2">
+        <div class="field"><span class="label">Age</span><input type="number" data-prof="age" value="${p.age}"></div>
+        <div class="field"><span class="label">Height (cm)</span><input type="number" data-prof="height" value="${p.height}"></div>
+        <div class="field"><span class="label">Weight (kg)</span><input type="number" step="0.1" data-prof="weight" value="${p.weight}"></div>
+        <div class="field"><span class="label">Start weight</span><input type="number" step="0.1" data-prof="startWeight" value="${p.startWeight}"></div>
+      </div>
+      <div class="field"><span class="label">Program start (Monday of week 1)</span>
+        <input type="text" data-prof="startDate" value="${p.startDate}" inputmode="numeric" placeholder="YYYY-MM-DD"></div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sec-h">Daily targets</div>
+    <div class="card grid2">
+      <div class="field"><span class="label">Protein low (g)</span><input type="number" data-targ="proteinLo" value="${S.targets.proteinLo}"></div>
+      <div class="field"><span class="label">Protein high (g)</span><input type="number" data-targ="proteinHi" value="${S.targets.proteinHi}"></div>
+      <div class="field"><span class="label">Steps low</span><input type="number" data-targ="stepsLo" value="${S.targets.stepsLo}"></div>
+      <div class="field"><span class="label">Steps high</span><input type="number" data-targ="stepsHi" value="${S.targets.stepsHi}"></div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sec-h">Equipment</div>
+    <div class="card">
+      <div class="seg">
+        <button data-equip="1" class="${p.equipment==1?'on':''}">Level 1<br><span class="tiny">7.5 kg + bodyweight</span></button>
+        <button data-equip="2" class="${p.equipment==2?'on':''}">Level 2<br><span class="tiny">bands, bench, more weight</span></button>
+      </div>
+      <div class="tiny muted" style="margin-top:10px">Level 2 switches the progression advice from tempo tricks to adding load. The session structure stays the same.</div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sec-h">Rest timers</div>
+    <div class="card stack">
+      ${['squat','row','lateral','curl'].map(id=>`<div class="field">
+        <span class="label">${esc(EX[id].name)}</span>
+        <input type="number" data-rest="${id}" value="${restFor(id)}"></div>`).join('')}
+      <div class="tiny muted">Defaults: 90 s for big lifts, 60 s for the small ones, 45–60 s for lateral raises.</div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sec-h">Data</div>
+    <div class="card stack">
+      <button class="btn ghost" data-act="export">Copy my data as backup</button>
+      <button class="btn ghost" data-act="reset" style="border-color:#e6b8c1;color:var(--rose)">Erase everything and restart</button>
+      <div class="tiny muted">Everything is stored on this device only. Nothing leaves your phone.</div>
+    </div>
+  </div>`;
+}
+
+/* ---------------- RUNNER ---------------- */
+function startWorkout(code){
+  S.active={ type:code, date:ymd(today()), startedAt:Date.now(), warmup:false, idx:0, sets:[], entry:null };
+  saveState(); render(); window.scrollTo(0,0);
+}
+function setsDone(exId){ return S.active.sets.filter(x=>x.ex===exId).length; }
+
+function renderRunner(){
+  const A=S.active, W=WORKOUTS[A.type], list=W.exs;
+  const totalSets=list.reduce((n,id)=>n+setsFor(A.type,id),0);
+  const doneSets=A.sets.length;
+  const mins=Math.floor((Date.now()-A.startedAt)/60000);
+
+  if(A.finished){ $('#app').innerHTML=completionHTML(); bindAll(); return; }
+
+  let body='';
+  if(!A.warmup){
+    body=`<div class="sec"><div class="card">
+      <div class="mid">Warm-up</div>
+      <div class="small muted" style="margin:4px 0 12px">About six minutes. This is most of your injury insurance, do not skip it.</div>
+      <div class="stack small">${WARMUP.map(x=>'<div>· '+esc(x)+'</div>').join('')}</div>
+      <div style="margin-top:16px"><button class="btn" data-act="warmup">Warm-up done</button></div>
+    </div></div>`;
+  } else {
+    body = list.map((id,i)=>{
+      const e=EX[id], n=setsFor(A.type,id), d=setsDone(id);
+      if(i!==A.idx){
+        return `<div class="card row" style="opacity:${d>=n?0.55:0.85}">
+          <div><div class="small" style="font-weight:600">${esc(e.name)}</div>
+          <div class="tiny muted num">${d}/${n} sets${d>=n?' ✓':''}</div></div>
+          <button class="btn sm ghost" data-jump="${i}">${d>=n?'Redo':'Go'}</button></div>`;
+      }
+      return currentExerciseCard(id, n, d);
+    }).join('');
+    body = `<div class="sec stack">${body}</div>
+    <div class="sec"><button class="btn dark" data-act="finish">Finish workout</button></div>`;
+  }
+
+  $('#app').innerHTML=`
+  <header>
+    <div class="eyebrow"><span>${esc(W.title)}</span><span>${doneSets}/${totalSets} sets · ${mins} min</span></div>
+    <h1>In session<small>${esc(phaseFor(weekNumber(today())).name)}</small></h1>
+    <div style="margin-top:12px">${bar(doneSets/totalSets*100)}</div>
+  </header>
+  <div class="taper"><i></i></div>
+  <main class="fade">${body}
+    <div class="sec"><button class="link" data-act="abandon">Cancel this session</button></div>
+  </main>`;
+  bindAll();
+  if(TIMER) mountTimer();
+  if(SHEET) mountSheet();
+}
+
+function currentExerciseCard(id, n, d){
+  const e=EX[id], A=S.active;
+  const dots=Array.from({length:n},(_,k)=>`<span class="${k<d?'done':(k===d?'now':'')}"></span>`).join('');
+  const prog = shouldProgress(id);
+  const last = lastSetsText(id);
+  const entry = A.entry && A.entry.ex===id ? A.entry : null;
+  const suggested = entry? entry.reps : suggestReps(id);
+
+  return `<div class="card" style="border-color:var(--ink);border-width:2px">
+    <div class="ex-head">
+      <div>
+        <div class="mid">${esc(e.name)}</div>
+        <div class="tiny num muted" style="margin-top:3px">${n} × ${e.lo}–${e.hi}${e.time?' sec':' reps'}${e.side?' each side':''} · rest ${restFor(id)} s</div>
+        <div class="tiny muted">${esc(e.kit)}</div>
+      </div>
+      ${e.prio?'<span class="pill c-a">priority</span>':''}
+    </div>
+    <div class="setdots">${dots}</div>
+    ${last?`<div class="tiny muted num" style="margin-top:10px">Last time: ${esc(last)}</div>`:''}
+    ${prog?`<div class="note" style="margin-top:10px">You topped the range last session with reps left over. ${esc(S.profile.equipment==2?'Add load this session.':e.prog)}</div>`:''}
+    ${e.heavy?`<div class="note" style="margin-top:10px">${esc(e.prog)}</div>`:''}
+    ${e.alt?`<div class="note blue" style="margin-top:10px">${esc(e.alt)}</div>`:''}
+
+    ${d>=n? `<div style="margin-top:14px"><button class="btn pine" data-act="nextex">All sets done — next exercise</button></div>` :
+    (entry? `
+      <div style="margin-top:16px" class="stack">
+        <div class="label">Set ${d+1} — ${e.time?'seconds held':'reps completed'}${e.side?' per side':''}</div>
+        <div class="stepper">
+          <button data-step="-1">−</button>
+          <input type="number" id="repsIn" value="${suggested}" inputmode="numeric">
+          <button data-step="1">+</button>
+        </div>
+        <div class="label">How did it feel</div>
+        <div class="seg">
+          ${['Easy','Normal','Hard'].map(x=>`<button data-diff="${x}" class="${entry.diff===x?'on':''}">${x}</button>`).join('')}
+        </div>
+        <button class="btn pine" data-act="completeset">Complete set ✓</button>
+        <button class="link" data-act="cancelset">Cancel</button>
+      </div>`
+    : `<div style="margin-top:16px" class="stack">
+        <button class="btn" data-act="startset">Start set ${d+1}</button>
+        <div class="row"><button class="link" data-sheet="ex:${id}">View instructions</button>
+        <button class="link" data-act="skipex">Skip exercise</button></div>
+      </div>`)}
+  </div>`;
+}
+function suggestReps(id){
+  const e=EX[id];
+  for(let i=S.sessions.length-1;i>=0;i--){
+    const sets=S.sessions[i].sets.filter(x=>x.ex===id);
+    if(sets.length) return Math.min(e.hi, sets[sets.length-1].reps);
+  }
+  return e.lo;
+}
+function lastSetsText(id){
+  for(let i=S.sessions.length-1;i>=0;i--){
+    const sets=S.sessions[i].sets.filter(x=>x.ex===id);
+    if(sets.length) return sets.map(x=>x.reps).join(' / ')+'  ('+S.sessions[i].date+')';
+  }
+  return null;
+}
+
+/* ---------------- rest timer ---------------- */
+function startTimer(sec,label){
+  if(TIMER&&TIMER.id) clearInterval(TIMER.id);
+  TIMER={left:sec,total:sec,label:label};
+  TIMER.id=setInterval(()=>{
+    TIMER.left--;
+    if(TIMER.left<=0){ TIMER.left=0; clearInterval(TIMER.id); TIMER.id=null; TIMER.done=true; buzz(); }
+    mountTimer();
+  },1000);
+  mountTimer();
+}
+function stopTimer(){ if(TIMER&&TIMER.id) clearInterval(TIMER.id); TIMER=null; const n=$('#timerSheet'); if(n) n.remove(); }
+function buzz(){ try{ if(navigator.vibrate) navigator.vibrate([200,100,200]); }catch(e){} }
+function mountTimer(){
+  const old=$('#timerSheet'); if(old) old.remove();
+  if(!TIMER) return;
+  const done=TIMER.done;
+  const node=el(`<div class="sheet" id="timerSheet"><div class="inner">
+    <div class="label">${done?'Rest complete':'Resting'} — ${esc(TIMER.label)}</div>
+    <div class="timer" style="color:${done?'var(--pine)':'var(--ink)'}">${done?'GO':mmss(TIMER.left)}</div>
+    ${done?'<div class="mid" style="text-align:center;margin-bottom:14px">Next set</div>':
+      `<div style="margin:14px 0">${bar((1-TIMER.left/TIMER.total)*100)}</div>`}
+    <div class="seg" style="margin-bottom:10px">
+      <button data-timer="-15">−15 s</button><button data-timer="15">+15 s</button>
+    </div>
+    <button class="btn ${done?'pine':'dark'}" data-timer="skip">${done?'Continue':'Skip rest'}</button>
+  </div></div>`);
+  document.body.appendChild(node);
+  applyLang(node);
+  node.querySelectorAll('[data-timer]').forEach(b=>b.onclick=()=>{
+    const v=b.dataset.timer;
+    if(v==='skip'){ stopTimer(); return; }
+    const nl=Math.max(1,TIMER.left+Number(v));
+    const lab=TIMER.label; const tot=Math.max(TIMER.total,nl);
+    startTimer(nl,lab); TIMER.total=tot;
+  });
+}
+
+/* ---------------- completion ---------------- */
+function completionHTML(){
+  const A=S.active, W=WORKOUTS[A.type];
+  const mins=Math.max(1,Math.round((Date.now()-A.startedAt)/60000));
+  const exCount=new Set(A.sets.map(s=>s.ex)).size;
+  const msgs= isZH() ? [
+    '接下来恢复就是训练的一部分。好好吃、好好睡，按计划再来。',
+    '又垒上一块砖。没什么戏剧性，做完就是做完。',
+    '背和肩的训练才是撑起 V 型的关键，今天两样你都练到了。',
+    '这一课不错。剩下的交给蛋白质和睡眠。'
+  ] : [
+    'Recovery is now part of the process. Eat, sleep, come back on schedule.',
+    'Another brick in the wall. Nothing dramatic, just done.',
+    'Back and shoulder work is what builds the taper, and you got both in.',
+    'Good session. Protein and sleep do the rest of the job today.'
+  ];
+  return `<header>
+    <div class="eyebrow"><span>${esc(fmtDate(today()))}</span><span>Week ${Math.min(weekNumber(today()),12)}</span></div>
+    <h1>Workout complete 🎉<small>${esc(W.title)}</small></h1></header>
+  <div class="taper"><i></i></div>
+  <main class="fade">
+    <div class="sec"><div class="grid2">
+      <div class="card"><div class="label">Duration</div><div class="big num">${mins}<span style="font-size:14px;color:var(--ink-3)">min</span></div></div>
+      <div class="card"><div class="label">Exercises</div><div class="big num">${exCount}</div></div>
+      <div class="card"><div class="label">Total sets</div><div class="big num">${A.sets.length}</div></div>
+      <div class="card"><div class="label">Personal records</div><div class="big num" style="color:${A.prs.length?'var(--pine)':'inherit'}">${A.prs.length}</div></div>
+    </div></div>
+    ${A.prs.length?`<div class="sec"><div class="card"><div class="label">New bests</div>
+      <div class="stack small" style="margin-top:8px">${A.prs.map(p=>`<div>${esc(EX[p.ex].name)} — ${p.reps}${EX[p.ex].time?' sec':' reps'}</div>`).join('')}</div></div></div>`:''}
+    <div class="sec"><div class="card"><div class="small">${esc(msgs[Math.floor(Math.random()*msgs.length)])}</div></div></div>
+    <div class="sec"><button class="btn" data-act="closesession">Done</button></div>
+  </main>`;
+}
+function finishWorkout(){
+  const A=S.active;
+  A.prs=[];
+  A.sets.forEach(s=>{
+    const b=S.bests[s.ex]||0;
+    if(s.reps>b){
+      S.bests[s.ex]=s.reps;
+      const p=A.prs.find(x=>x.ex===s.ex);
+      if(p) p.reps=s.reps; else A.prs.push({ex:s.ex,reps:s.reps});
+    }
+  });
+  A.finished=true;
+  stopTimer();
+  saveState(); renderRunner();
+}
+function closeSession(){
+  const A=S.active;
+  const rec={ date:A.date, type:A.type, durationSec:Math.round((Date.now()-A.startedAt)/1000),
+    sets:A.sets, totalSets:A.sets.length, prs:A.prs||[] };
+  const i=S.sessions.findIndex(s=>s.date===rec.date && s.type===rec.type);
+  if(i>=0) S.sessions[i]=rec; else S.sessions.push(rec);
+  S.sessions.sort((a,b)=>a.date<b.date?-1:1);
+  S.active=null; saveState(); TAB='home'; render(); window.scrollTo(0,0);
+}
+
+/* ---------------- sheets ---------------- */
+function mountSheet(){
+  const old=$('#sheet'); if(old) old.remove();
+  if(!SHEET) return;
+  const node=el(`<div class="sheet" id="sheet"><div class="inner">${sheetHTML()}</div></div>`);
+  document.body.appendChild(node);
+  applyLang(node);
+  node.addEventListener('click',ev=>{ if(ev.target===node){ SHEET=null; node.remove(); } });
+  node.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>{ SHEET=null; node.remove(); });
+  node.querySelectorAll('[data-save]').forEach(b=>b.onclick=()=>saveSheet(b.dataset.save, node));
+}
+function sheetHTML(){
+  if(SHEET.kind==='ex'){
+    const e=EX[SHEET.id];
+    return `<h3>${esc(e.name)}</h3>
+    <div class="tiny num muted">${e.sets} × ${e.lo}–${e.hi}${e.time?' sec':' reps'}${e.side?' each side':''} · rest ${restFor(SHEET.id)} s · ${esc(e.kit)}</div>
+    <h4>How to perform</h4><ul>${e.how.map(x=>'<li>'+esc(x)+'</li>').join('')}</ul>
+    <h4>Form tips</h4><ul>${e.tips.map(x=>'<li>'+esc(x)+'</li>').join('')}</ul>
+    <h4>Common mistakes</h4><ul>${e.miss.map(x=>'<li>'+esc(x)+'</li>').join('')}</ul>
+    <h4>Target muscles</h4><ul>${e.mus.map(x=>'<li>'+esc(x)+'</li>').join('')}</ul>
+    <h4>When it gets easy</h4><div class="note">${esc(e.prog)}</div>
+    ${e.alt?`<div class="note blue" style="margin-top:10px">${esc(e.alt)}</div>`:''}
+    <div style="margin-top:20px"><button class="btn dark" data-close="1">Close</button></div>`;
+  }
+  if(SHEET.kind==='measure'){
+    const l=latestMeasure()||{};
+    return `<h3>Log measurements</h3>
+    <div class="small muted">Weekly is plenty. Same time of day, same conditions.</div>
+    <div class="grid2" style="margin-top:16px">
+      <div class="field"><span class="label">Weight (kg)</span><input type="number" step="0.1" id="m_weight" value="${l.weight||currentWeight()}"></div>
+      <div class="field"><span class="label">Waist (cm)</span><input type="number" step="0.1" id="m_waist" value="${l.waist||''}"></div>
+      <div class="field"><span class="label">Chest (cm)</span><input type="number" step="0.1" id="m_chest" value="${l.chest||''}"></div>
+      <div class="field"><span class="label">Arm (cm)</span><input type="number" step="0.1" id="m_arm" value="${l.arm||''}"></div>
+      <div class="field"><span class="label">Thigh (cm)</span><input type="number" step="0.1" id="m_thigh" value="${l.thigh||''}"></div>
+    </div>
+    <div class="stack" style="margin-top:18px">
+      <button class="btn" data-save="measure">Save entry</button>
+      <button class="link" data-close="1">Cancel</button></div>`;
+  }
+  if(SHEET.kind==='log'){
+    const k=SHEET.key, lg=todayLog();
+    const label={protein:'Protein today (g)',steps:'Steps today',sleep:'Sleep last night (hours)'}[k];
+    return `<h3>${esc(label)}</h3>
+    <div class="field" style="margin-top:14px"><input type="number" step="${k==='sleep'?'0.25':'1'}" id="logIn" value="${lg[k]==null?'':lg[k]}"></div>
+    <div class="stack" style="margin-top:18px">
+      <button class="btn" data-save="log">Save</button>
+      <button class="link" data-close="1">Cancel</button></div>`;
+  }
+  if(SHEET.kind==='checkin'){
+    const w=weekNumber(today()), st=weekStats(w);
+    const q=(id,label,type,extra)=>`<div class="field" style="margin-top:14px"><span class="label">${label}</span>
+      ${type==='seg'?`<div class="seg" data-group="${id}">${extra.map(o=>`<button data-pick="${id}:${o}">${o}</button>`).join('')}</div>`
+      :`<input type="number" step="0.1" id="ci_${id}" ${extra||''}></div>`}`;
+    return `<h3>Week ${w} check-in</h3>
+    <div class="small muted">Nine questions. Then I write your summary for next week.</div>
+    <div class="field" style="margin-top:14px"><span class="label">1. Strength sessions completed</span>
+      <input type="number" id="ci_workouts" value="${st.done}"></div>
+    ${q('weight','2. Average body weight (kg)','num','')}
+    ${q('waist','3. Waist (cm)','num','')}
+    ${q('energy','4. Energy level','seg',['Low','Okay','Good','High'])}
+    ${q('hard','5. How hard was training','seg',['Easy','Right','Too hard'])}
+    ${q('pain','6. Any pain','seg',['None','Mild','Real pain'])}
+    <div class="field" style="margin-top:14px"><span class="label">7. Which exercise improved most</span>
+      <input type="text" id="ci_best" placeholder="e.g. push-ups"></div>
+    ${q('sleep','8. Sleep quality','seg',['Poor','Okay','Good'])}
+    ${q('protein','9. Hit your protein most days','seg',['No','Mostly','Yes'])}
+    <div class="stack" style="margin-top:20px">
+      <button class="btn" data-save="checkin">Save check-in</button>
+      <button class="link" data-close="1">Later</button></div>`;
+  }
+  return '';
+}
+function pickVal(node,id){ const b=node.querySelector(`[data-group="${id}"] button.on`); return b? b.dataset.pick.split(':')[1] : null; }
+
+function saveSheet(kind,node){
+  const num=id=>{ const v=node.querySelector('#'+id); if(!v||v.value==='') return null; return Number(v.value); };
+  if(kind==='measure'){
+    const e={date:ymd(today()), weight:num('m_weight'), waist:num('m_waist'), chest:num('m_chest'), arm:num('m_arm'), thigh:num('m_thigh')};
+    const i=S.measures.findIndex(x=>x.date===e.date);
+    if(i>=0) S.measures[i]=e; else S.measures.push(e);
+    S.measures.sort((a,b)=>a.date<b.date?-1:1);
+    if(e.weight) S.profile.weight=e.weight;
+  }
+  if(kind==='log'){
+    const v=num('logIn'); todayLog()[SHEET.key]= v==null?0:v;
+  }
+  if(kind==='checkin'){
+    const w=weekNumber(today());
+    const c={ week:w, workouts:num('ci_workouts')||0, weight:num('ci_weight'), waist:num('ci_waist'),
+      energy:pickVal(node,'energy'), hard:pickVal(node,'hard'), pain:pickVal(node,'pain'),
+      best:(node.querySelector('#ci_best')||{}).value||'', sleep:pickVal(node,'sleep'), protein:pickVal(node,'protein') };
+    c.summary=buildSummary(c);
+    const i=S.checkins.findIndex(x=>x.week===w);
+    if(i>=0) S.checkins[i]=c; else S.checkins.push(c);
+    if(c.weight||c.waist){
+      const e={date:ymd(today()), weight:c.weight, waist:c.waist};
+      const j=S.measures.findIndex(x=>x.date===e.date);
+      if(j>=0) S.measures[j]=Object.assign(S.measures[j],e); else S.measures.push(e);
+    }
+  }
+  SHEET=null; node.remove(); saveState(); render();
+}
+function buildSummary(c){
+  if(isZH()) return buildSummaryZH(c);
+  const st=weekStats(c.week);
+  let out=[];
+  if(c.workouts>=st.planned) out.push(`Full week, ${c.workouts}/${st.planned} sessions done.`);
+  else if(c.workouts>0) out.push(`${c.workouts}/${st.planned} sessions. Not perfect, and it still counts. Pick up the normal schedule, do not double anything.`);
+  else out.push('No sessions this week. Restart at the next scheduled day, same weights, no punishment.');
+  const prev=S.checkins.find(x=>x.week===c.week-1);
+  if(prev&&prev.waist&&c.waist){
+    const d=+(c.waist-prev.waist).toFixed(1);
+    out.push(d<0?`Waist down ${Math.abs(d)} cm.`:(d>0?`Waist up ${d} cm, watch portions rather than cutting food hard.`:'Waist holding steady.'));
+  }
+  if(c.best) out.push(`Biggest jump: ${c.best}.`);
+  if(c.pain==='Real pain') out.push('You reported real pain. Drop the exercise that caused it, swap to a pain-free variation, and get it checked if it persists.');
+  else if(c.hard==='Too hard') out.push('Training felt too hard, so keep the same numbers next week instead of adding anything.');
+  else if(c.hard==='Easy') out.push('Training felt easy, so add reps or slow the lowering phase next week.');
+  else out.push('Keep the same training difficulty next week and let the reps creep up.');
+  if(c.sleep==='Poor') out.push('Sleep is the weak link right now, that matters more than any set you did.');
+  if(c.protein==='No') out.push('Protein slipped. One extra egg or a glass of milk per meal closes most of that gap.');
+  return out.join(' ');
+}
+
+
+function buildSummaryZH(c){
+  const st=weekStats(c.week);
+  let out=[];
+  if(c.workouts>=st.planned) out.push('完整的一周，'+c.workouts+'/'+st.planned+' 次训练全部完成。');
+  else if(c.workouts>0) out.push(c.workouts+'/'+st.planned+' 次。不完美，但依然算数。按正常计划继续，不用补练。');
+  else out.push('这周一次都没练。下一个训练日照常开始，重量不变，也不用惩罚自己。');
+  const prev=S.checkins.find(x=>x.week===c.week-1);
+  if(prev&&prev.waist&&c.waist){
+    const d=+(c.waist-prev.waist).toFixed(1);
+    out.push(d<0?('腰围下降 '+Math.abs(d)+' 厘米。'):(d>0?('腰围上升 '+d+' 厘米，先控制份量，不要急着大幅节食。'):'腰围保持稳定。'));
+  }
+  if(c.best) out.push('进步最大的是：'+c.best+'。');
+  if(c.pain==='Real pain') out.push('你记录了明显疼痛。停掉引起疼痛的动作，换成不痛的变式；如果持续，去看医生。');
+  else if(c.hard==='Too hard') out.push('训练感觉太难，下周保持同样的数字，先不要加任何东西。');
+  else if(c.hard==='Easy') out.push('训练感觉轻松，下周可以加次数或放慢下放速度。');
+  else out.push('下周保持同样难度，让次数自然往上爬。');
+  if(c.sleep==='Poor') out.push('目前睡眠是最短的那块板，它比你做的任何一组都重要。');
+  if(c.protein==='No') out.push('蛋白质没跟上。每餐多一个鸡蛋或一杯牛奶，基本就补回来了。');
+  return out.join('');
+}
+
+/* ---------------- onboarding ---------------- */
+let OB=1;
+function renderOnboarding(){
+  const p=S.profile;
+  const steps={
+    1:`<div class="step">Step 1 of 4</div><h2>Your profile</h2>
+      <div class="grid2">
+        <div class="field"><span class="label">Age</span><input type="number" id="ob_age" value="${p.age}"></div>
+        <div class="field"><span class="label">Height (cm)</span><input type="number" id="ob_height" value="${p.height}"></div>
+        <div class="field"><span class="label">Weight (kg)</span><input type="number" step="0.1" id="ob_weight" value="${p.weight}"></div>
+        <div class="field"><span class="label">Sex</span><input type="text" id="ob_sex" value="${p.sex}"></div>
+      </div>`,
+    2:`<div class="step">Step 2 of 4</div><h2>Your equipment</h2>
+      <ul class="checklist">
+        <li><b>✓</b> Bodyweight</li><li><b>✓</b> One 7.5 kg dumbbell</li>
+        <li><b>✓</b> Floor</li><li><b>✓</b> Stable chair or bed edge</li>
+      </ul>
+      <div class="note" style="margin-top:16px">Every session in this program is built around exactly that. Nothing here needs a gym.</div>`,
+    3:`<div class="step">Step 3 of 4</div><h2>Your goal</h2>
+      <ul class="checklist">
+        <li><b>✓</b> Build muscle, shoulders and back first</li>
+        <li><b>✓</b> Reduce body fat gradually, no crash dieting</li>
+        <li><b>✓</b> Wider shoulders, wider back, tighter waist</li>
+        <li><b>✓</b> Better proportions and a habit that survives exam weeks</li>
+      </ul>
+      <div class="note blue" style="margin-top:16px">Body recomposition, not weight loss. At 66 kg and 170 cm the scale barely needs to move.</div>`,
+    4:`<div class="step">Step 4 of 4</div><h2>12 weeks starts today</h2>
+      <div class="small" style="color:var(--ink-2)">Three strength sessions, one core and cardio day, one walking day, two rest days. Every week. Open the app, read one screen, train.</div>
+      <div class="field" style="margin-top:18px"><span class="label">Week 1 Monday</span>
+        <input type="text" id="ob_start" value="${ymd(mondayOf(today()))}"></div>`
+  };
+  $('#app').innerHTML=`<div class="ob fade">
+    <div class="row"><div class="wordmark">Taper</div>
+      <div class="seg" style="width:auto">
+        <button data-lang="en" class="btn sm ${S.lang!=='zh'?'':'ghost'}" style="${S.lang!=='zh'?'':'background:transparent'}">EN</button>
+        <button data-lang="zh" class="btn sm ${S.lang==='zh'?'':'ghost'}" style="${S.lang==='zh'?'':'background:transparent'}">中文</button>
+      </div></div>
+    <div style="margin-top:22px">${steps[OB]}</div>
+    <div style="margin-top:26px" class="stack">
+      <button class="btn" data-ob="next">${OB===4?'Start week 1':'Continue'}</button>
+      ${OB>1?'<button class="link" data-ob="back">Back</button>':''}
+    </div>
+    <div class="taper" style="margin-top:28px"><i></i></div>
+  </div>`;
+  bindAll();
+}
+function obNext(){
+  if(OB===1){
+    const g=id=>Number(($('#'+id)||{}).value);
+    S.profile.age=g('ob_age')||23; S.profile.height=g('ob_height')||170;
+    const w=g('ob_weight')||66; S.profile.weight=w; S.profile.startWeight=w;
+    const sx=$('#ob_sex'); if(sx) S.profile.sex=sx.value;
+  }
+  if(OB===4){
+    const sd=$('#ob_start');
+    if(sd && /^\d{4}-\d{2}-\d{2}$/.test(sd.value)) S.profile.startDate=sd.value;
+    S.onboarded=true;
+    S.measures.push({date:ymd(today()), weight:S.profile.weight});
+    saveState(); render(); return;
+  }
+  OB++; renderOnboarding();
+}
+
+/* ---------------- events ---------------- */
+function bindAll(){
+  document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>go(b.dataset.tab));
+  document.querySelectorAll('[data-start]').forEach(b=>b.onclick=()=>startWorkout(b.dataset.start));
+  document.querySelectorAll('[data-sheet]').forEach(b=>b.onclick=()=>{
+    const v=b.dataset.sheet;
+    if(v.startsWith('ex:')) SHEET={kind:'ex',id:v.slice(3)};
+    else if(v==='measure') SHEET={kind:'measure'};
+    else if(v==='checkin') SHEET={kind:'checkin'};
+    mountSheet();
+  });
+  document.querySelectorAll('[data-log]').forEach(b=>b.onclick=()=>{
+    const k=b.dataset.log;
+    if(b.dataset.add){ const lg=todayLog(); lg[k]=(lg[k]||0)+Number(b.dataset.add); saveState(); render(); }
+    else { SHEET={kind:'log',key:k}; mountSheet(); }
+  });
+  document.querySelectorAll('[data-ob]').forEach(b=>b.onclick=()=>{
+    if(b.dataset.ob==='next') obNext(); else { OB=Math.max(1,OB-1); renderOnboarding(); }
+  });
+  document.querySelectorAll('[data-jump]').forEach(b=>b.onclick=()=>{
+    S.active.idx=Number(b.dataset.jump); S.active.entry=null; saveState(); renderRunner(); window.scrollTo(0,0);
+  });
+  document.querySelectorAll('[data-step]').forEach(b=>b.onclick=()=>{
+    const i=$('#repsIn'); i.value=Math.max(0,Number(i.value||0)+Number(b.dataset.step));
+    S.active.entry.reps=Number(i.value);
+  });
+  document.querySelectorAll('[data-diff]').forEach(b=>b.onclick=()=>{
+    const i=$('#repsIn'); if(i) S.active.entry.reps=Number(i.value||0);
+    S.active.entry.diff=b.dataset.diff; renderRunner();
+  });
+  document.querySelectorAll('[data-pick]').forEach(b=>b.onclick=()=>{
+    const grp=b.closest('.seg'); grp.querySelectorAll('button').forEach(x=>x.classList.remove('on')); b.classList.add('on');
+  });
+  document.querySelectorAll('[data-prof]').forEach(i=>i.onchange=()=>{
+    const k=i.dataset.prof; S.profile[k]= k==='startDate'? i.value : Number(i.value); saveState(); render();
+  });
+  document.querySelectorAll('[data-targ]').forEach(i=>i.onchange=()=>{
+    S.targets[i.dataset.targ]=Number(i.value); saveState();
+  });
+  document.querySelectorAll('[data-rest]').forEach(i=>i.onchange=()=>{
+    S.rest[i.dataset.rest]=Math.max(10,Number(i.value)); saveState();
+  });
+  document.querySelectorAll('[data-equip]').forEach(b=>b.onclick=()=>{
+    S.profile.equipment=Number(b.dataset.equip); saveState(); render();
+  });
+  document.querySelectorAll('[data-act]').forEach(b=>b.onclick=()=>act(b.dataset.act));
+  document.querySelectorAll('[data-lang]').forEach(b=>b.onclick=()=>setLang(b.dataset.lang));
+  applyLang(document.body);
+}
+function act(a){
+  const A=S.active;
+  if(a==='warmup'){ A.warmup=true; saveState(); renderRunner(); return; }
+  if(a==='startset'){ const id=WORKOUTS[A.type].exs[A.idx]; A.entry={ex:id, reps:suggestReps(id), diff:'Normal'}; saveState(); renderRunner(); return; }
+  if(a==='cancelset'){ A.entry=null; renderRunner(); return; }
+  if(a==='completeset'){
+    const i=$('#repsIn'); const reps=Math.max(0,Number(i?i.value:A.entry.reps));
+    const id=A.entry.ex, e=EX[id];
+    A.sets.push({ex:id, reps, diff:A.entry.diff||'Normal'});
+    A.entry=null;
+    const n=setsFor(A.type,id), d=setsDone(id);
+    if(d>=n){ if(A.idx < WORKOUTS[A.type].exs.length-1) A.idx++; }
+    saveState(); renderRunner();
+    if(d<n || A.idx<WORKOUTS[A.type].exs.length) startTimer(restFor(id), e.name);
+    return;
+  }
+  if(a==='nextex'){ if(A.idx<WORKOUTS[A.type].exs.length-1) A.idx++; saveState(); renderRunner(); window.scrollTo(0,0); return; }
+  if(a==='skipex'){ if(A.idx<WORKOUTS[A.type].exs.length-1){A.idx++; saveState(); renderRunner(); window.scrollTo(0,0);} return; }
+  if(a==='finish'){ if(!A.sets.length){ if(!confirm(isZH()?'还没有记录任何一组，确定结束吗？':'No sets logged. Finish anyway?')) return; } finishWorkout(); return; }
+  if(a==='closesession'){ closeSession(); return; }
+  if(a==='abandon'){ if(confirm(isZH()?'取消本次训练？已记录的组数会被丢弃。':'Cancel this session? Logged sets will be discarded.')){ stopTimer(); S.active=null; saveState(); TAB='home'; render(); } return; }
+  if(a==='export'){
+    const t=JSON.stringify(S);
+    navigator.clipboard? navigator.clipboard.writeText(t).then(()=>alert(isZH()?'备份已复制，粘贴到安全的地方保存。':'Backup copied. Paste it somewhere safe.'),()=>alert(t)) : alert(t);
+    return;
+  }
+  if(a==='reset'){
+    if(confirm(isZH()?'清空所有训练、围度和记录？此操作无法撤销。':'Erase all workouts, measurements and logs? This cannot be undone.')){
+      const keep=S.lang; S=freshState(); S.lang=keep; OB=1; TAB='home'; saveState(); render();
+    }
+    return;
+  }
+}
+
+/* ---------------- boot ---------------- */
+(async function(){
+  const loaded=await loadState();
+  S = loaded ? Object.assign(freshState(), loaded) : freshState();
+  if(!S.profile) S.profile=freshState().profile;
+  if(!S.targets) S.targets=freshState().targets;
+  if(S.active && S.active.date!==ymd(today())) S.active=null;
+  if(S.lang==='zh'){ document.documentElement.lang='zh-CN'; document.body.style.fontFamily='-apple-system,"PingFang SC","Hiragino Sans GB","Noto Sans SC","Microsoft YaHei",system-ui,sans-serif'; }   // stale session from another day
+  render();
+  setInterval(()=>{ if(S.active && !S.active.finished && !TIMER && !SHEET) { /* keep the minute counter fresh */ } }, 60000);
+})();
+</script>
+<script>
+if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));}
+</script>
+</body>
+</html>
